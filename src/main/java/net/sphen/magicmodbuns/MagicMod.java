@@ -14,6 +14,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class MagicMod
         ModCreativeModeTabs.register(modEventBus);
 
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);

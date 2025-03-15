@@ -13,6 +13,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, MagicMod.MODID);
 
     public static final RegistryObject<Item> CHALK = ITEMS.register("chalk", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> LIMESTONE_CHUNK = ITEMS.register("limestone_chunk", () -> new Item(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

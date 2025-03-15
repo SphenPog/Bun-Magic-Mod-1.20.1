@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.block.ModBlocks;
 
 public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
@@ -18,7 +19,12 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable("creativetab.magic_tab"))
                     .displayItems(((pParameters, pOutput) -> {
                         pOutput.accept(ModItems.CHALK.get());
-                        //add more items here
+                        pOutput.accept(ModItems.LIMESTONE_CHUNK.get());
+
+                        pOutput.accept(ModBlocks.POLISHED_LIMESTONE.get());
+                        pOutput.accept(ModBlocks.MORTAR_AND_PESTLE.get());
+                        pOutput.accept(ModBlocks.RAW_LIMESTONE.get());
+                        //add more items here (includes them in the creative menu)
                     }))
                     .build());
 

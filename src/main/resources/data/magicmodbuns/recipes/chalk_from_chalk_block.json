@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "magicmodbuns:chalk_block"
+    }
+  ],
+  "result": {
+    "item": "magicmodbuns:chalk",
+    "count": 1
+  }
+}
