@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "magicmodbuns:block/polished_limestone"
+      "model": "magicmodbuns:block/raw_limestone"
     }
   }
 }

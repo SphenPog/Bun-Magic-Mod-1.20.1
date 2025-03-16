@@ -20,6 +20,7 @@ public class ModCreativeModeTabs {
                     .displayItems(((pParameters, pOutput) -> {
                         pOutput.accept(ModItems.CHALK.get());
                         pOutput.accept(ModItems.LIMESTONE_CHUNK.get());
+                        pOutput.accept(ModItems.METAL_DETECTOR.get());
 
                         pOutput.accept(ModBlocks.POLISHED_LIMESTONE.get());
                         pOutput.accept(ModBlocks.MORTAR_AND_PESTLE.get());
