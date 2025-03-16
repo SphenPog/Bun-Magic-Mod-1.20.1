@@ -25,6 +25,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModBlocks.POLISHED_LIMESTONE.get());
                         pOutput.accept(ModBlocks.MORTAR_AND_PESTLE.get());
                         pOutput.accept(ModBlocks.RAW_LIMESTONE.get());
+                        pOutput.accept(ModBlocks.POTION_BOTTLE_BLOCK.get());
                         //add more items here (includes them in the creative menu)
                     }))
                     .build());

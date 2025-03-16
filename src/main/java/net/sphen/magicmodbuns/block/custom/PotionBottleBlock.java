@@ -1,7 +1,5 @@
 package net.sphen.magicmodbuns.block.custom;
 
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.SimpleMapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -13,14 +11,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-public class MortarAndPestal extends HorizontalDirectionalBlock {
+public class PotionBottleBlock extends HorizontalDirectionalBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final VoxelShape SHAPE = Block.box(3, 0, 3, 13, 7, 13);
+    public static final VoxelShape SHAPE = Block.box(6, 0, 6, 10, 10, 10);
 
-    public MortarAndPestal(Properties pProperties) {
+    public PotionBottleBlock(Properties pProperties) {
         super(pProperties);
     }
 

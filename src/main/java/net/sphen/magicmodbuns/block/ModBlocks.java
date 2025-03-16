@@ -11,7 +11,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.block.custom.MortarAndPestal;
+import net.sphen.magicmodbuns.block.custom.MortarAndPestleBlock;
+import net.sphen.magicmodbuns.block.custom.PotionBottleBlock;
 import net.sphen.magicmodbuns.item.ModItems;
 
 import java.util.function.Supplier;
@@ -28,7 +29,9 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.ANDESITE)
                     .strength(2f).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle",
-            () -> new MortarAndPestal(BlockBehaviour.Properties.of().noOcclusion()));
+            () -> new MortarAndPestleBlock(BlockBehaviour.Properties.of().noOcclusion()));
+    public static final RegistryObject<Block> POTION_BOTTLE_BLOCK = registerBlock("potion_bottle",
+            () -> new PotionBottleBlock(BlockBehaviour.Properties.copy(Blocks.GLASS).noOcclusion()));
     //add new blocks here ^^
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
