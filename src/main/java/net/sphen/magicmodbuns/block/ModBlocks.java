@@ -14,7 +14,6 @@ import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.custom.MortarAndPestleBlock;
 import net.sphen.magicmodbuns.block.custom.PotionBottleBlock;
 import net.sphen.magicmodbuns.item.ModItems;
-
 import java.util.function.Supplier;
 
 public class ModBlocks {
@@ -23,15 +22,19 @@ public class ModBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, MagicMod.MODID);
 
     //blocks
+
     public static final RegistryObject<Block> POLISHED_LIMESTONE = registerBlock("polished_limestone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.STONE)));
     public static final RegistryObject<Block> RAW_LIMESTONE = registerBlock("raw_limestone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.ANDESITE)
                     .strength(2f).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle",
-            () -> new MortarAndPestleBlock(BlockBehaviour.Properties.of().noOcclusion()));
+            () -> new MortarAndPestleBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
     public static final RegistryObject<Block> POTION_BOTTLE_BLOCK = registerBlock("potion_bottle",
             () -> new PotionBottleBlock(BlockBehaviour.Properties.copy(Blocks.GLASS).noOcclusion()));
+    public static final RegistryObject<Block> WILLOW_LOG = registerBlock("willow_log",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+
     //add new blocks here ^^
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

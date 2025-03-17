@@ -1,6 +1,7 @@
 package net.sphen.magicmodbuns;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,8 +16,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.sphen.magicmodbuns.block.ModBlocks;
+import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
+import net.sphen.magicmodbuns.block.entity.MortarAndPestleBlockEntity;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
+import net.sphen.magicmodbuns.screen.ModMenuTypes;
+import net.sphen.magicmodbuns.screen.MortarPestleScreen;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -41,6 +46,9 @@ public class MagicMod
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
@@ -69,6 +77,7 @@ public class MagicMod
     {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            MenuScreens.register(ModMenuTypes.MORTAR_PESTLE_MENU.get(), MortarPestleScreen :: new);
 
         }
     }
