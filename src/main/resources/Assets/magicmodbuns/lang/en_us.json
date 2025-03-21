@@ -5,7 +5,14 @@
 
   "block.magicmodbuns.polished_limestone": "Polished Limestone",
   "block.magicmodbuns.raw_limestone": "Raw Limestone",
+
   "block.magicmodbuns.willow_log": "Willow Log",
+  "block.magicmodbuns.willow_wood": "Willow Wood",
+  "block.magicmodbuns.stripped_willow_log": "Stripped Willow Log",
+  "block.magicmodbuns.stripped_willow_wood": "Stripped Willow Wood",
+  "block.magicmodbuns.willow_planks": "Willow Planks",
+  "block.magicmodbuns.willow_leaves": "Willow Leaves",
+
   "block.magicmodbuns.mortar_and_pestle": "Mortar and Pestle",
   "block.magicmodbuns.potion_bottle": "Potion Bottle",
 

@@ -2,8 +2,6 @@ package net.sphen.magicmodbuns.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -49,9 +47,6 @@ public class MortarAndPestleBlock extends BaseEntityBlock {
             }
         }
 
-        pLevel.playSound(pPlayer, pPos, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS,
-                1f, 1f);
-
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
@@ -65,6 +60,7 @@ public class MortarAndPestleBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
@@ -72,7 +68,6 @@ public class MortarAndPestleBlock extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        super.createBlockStateDefinition(pBuilder);
         pBuilder.add(FACING);
     }
 

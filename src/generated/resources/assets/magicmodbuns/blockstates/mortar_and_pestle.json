@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "magicmodbuns:block/mortar_and_pestle",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "magicmodbuns:block/mortar_and_pestle"
+    },
+    "facing=south": {
+      "model": "magicmodbuns:block/mortar_and_pestle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "magicmodbuns:block/mortar_and_pestle",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "magicmodbuns:block/stripped_willow_log",
+    "side": "magicmodbuns:block/stripped_willow_log"
+  }
+}

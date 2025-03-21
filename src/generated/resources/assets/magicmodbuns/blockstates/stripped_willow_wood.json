@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "magicmodbuns:block/stripped_willow_wood_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "magicmodbuns:block/stripped_willow_wood"
+    },
+    "axis=z": {
+      "model": "magicmodbuns:block/stripped_willow_wood_horizontal",
+      "x": 90
+    }
+  }
+}

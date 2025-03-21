@@ -1,0 +1,12 @@
+// 1.20.1	2025-03-21T13:29:34.8693648	Tags for minecraft:block mod id magicmodbuns
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/forge/tags/blocks/needs_netherite_tool.json
+cb28339548a9f5c43f81c4715df14c62d24020ad data/magicmodbuns/tags/blocks/metal_detector_valuables.json
+8a6a4d0e9b5d7a2e7f625bffcfc83f8c11a50608 data/minecraft/tags/blocks/logs_that_burn.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/mineable/axe.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/mineable/hoe.json
+7b083832060d0995bb11137b33489381292f1a0f data/minecraft/tags/blocks/mineable/pickaxe.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/mineable/shovel.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/needs_diamond_tool.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/needs_iron_tool.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/minecraft/tags/blocks/needs_stone_tool.json
+ae28035df171a789f5f45e94b0d2516a09c88bf5 data/minecraft/tags/blocks/planks.json

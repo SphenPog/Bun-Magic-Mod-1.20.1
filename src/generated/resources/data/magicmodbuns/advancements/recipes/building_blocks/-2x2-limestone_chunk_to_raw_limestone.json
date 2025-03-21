@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_limestone_chunk": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "magicmodbuns:limestone_chunk"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "magicmodbuns:-2x2-limestone_chunk_to_raw_limestone"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_limestone_chunk",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "magicmodbuns:-2x2-limestone_chunk_to_raw_limestone"
+    ]
+  },
+  "sends_telemetry_event": false
+}
