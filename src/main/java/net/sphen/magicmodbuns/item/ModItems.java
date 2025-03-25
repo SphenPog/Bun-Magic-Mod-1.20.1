@@ -6,6 +6,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.item.custom.ChalkItem;
 import net.sphen.magicmodbuns.item.custom.MetalDetectorItem;
 
 public class ModItems {
@@ -14,7 +15,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, MagicMod.MODID);
 
     public static final RegistryObject<Item> CHALK = ITEMS.register("chalk",
-            () -> new Item(new Item.Properties()));
+            () -> new ChalkItem(new Item.Properties()));
     public static final RegistryObject<Item> LIMESTONE_CHUNK = ITEMS.register("limestone_chunk",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> METAL_DETECTOR = ITEMS.register("metal_detector",

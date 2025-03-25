@@ -1,5 +1,6 @@
 package net.sphen.magicmodbuns.screen;
 
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -16,6 +17,9 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<MortarPestleMenu>> MORTAR_PESTLE_MENU =
             registerMenuType("mortar_pestle_menu", MortarPestleMenu :: new);
+
+    public static final RegistryObject<MenuType<ChalkMenu>> CHALK_MENU =
+            MENUS.register("chalk_menu", () -> new MenuType<>(ChalkMenu::new, FeatureFlags.VANILLA_SET));
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory){
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
