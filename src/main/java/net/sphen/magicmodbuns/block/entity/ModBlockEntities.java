@@ -20,6 +20,11 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(MortarAndPestleBlockEntity :: new,
                             ModBlocks.MORTAR_AND_PESTLE.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<ChalkPatternBlockEntity>> CHALK_PATTERN =
+            BLOCK_ENTITIES.register("chalk_pattern", () ->
+                    BlockEntityType.Builder.of(ChalkPatternBlockEntity :: new,
+                            ModBlocks.CHALK_PATTERN.get()).build(null));
+
     public static void register(IEventBus eventBus){
         BLOCK_ENTITIES.register(eventBus);
     }

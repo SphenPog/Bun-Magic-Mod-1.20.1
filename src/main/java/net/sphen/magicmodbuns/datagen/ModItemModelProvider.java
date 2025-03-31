@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
@@ -26,8 +27,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleBlockItem(ModBlocks.POLISHED_LIMESTONE);
         simpleBlockItem(ModBlocks.RAW_LIMESTONE);
         simpleBlockItem(ModBlocks.POTION_BOTTLE_BLOCK);
+        simpleBlockItem(ModBlocks.CHALK_PATTERN);
 
-        BlockSpecialItem(ModBlocks.MORTAR_AND_PESTLE);
+        blockSpecialItem(ModBlocks.MORTAR_AND_PESTLE);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item){
@@ -41,7 +43,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                 new ResourceLocation(MagicMod.MODID, "block/" + block.getId().getPath()));
     }
 
-    private ItemModelBuilder BlockSpecialItem(RegistryObject<Block> block){
+    private ItemModelBuilder blockSpecialItem(RegistryObject<Block> block){
         return withExistingParent(block.getId().getPath(),
                 new ResourceLocation("item/generated")).texture("layer0",
                 new ResourceLocation(MagicMod.MODID, "item/" + block.getId().getPath()));

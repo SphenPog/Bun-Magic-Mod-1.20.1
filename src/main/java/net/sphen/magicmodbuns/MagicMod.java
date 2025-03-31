@@ -1,9 +1,16 @@
 package net.sphen.magicmodbuns;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterNamedRenderTypesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -13,7 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
+import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
@@ -48,10 +57,10 @@ public class MagicMod
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen::new);
     }
 
     // Add the example block item to the building blocks tab
@@ -74,7 +83,8 @@ public class MagicMod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(ModMenuTypes.MORTAR_PESTLE_MENU.get(), MortarPestleScreen :: new);
-
+            MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen::new);
+            BlockEntityRenderers.register(ModBlockEntities.CHALK_PATTERN.get(), context -> new ChalkPatternBlockRenderer());
         }
     }
 }

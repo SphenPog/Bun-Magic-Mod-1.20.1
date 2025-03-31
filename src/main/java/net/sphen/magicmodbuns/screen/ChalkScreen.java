@@ -1,15 +1,31 @@
 package net.sphen.magicmodbuns.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.block.ModBlocks;
+import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.Dot;
 import net.sphen.magicmodbuns.screen.elements.Line;
+import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.PatternTextureGenerator;
+import net.sphen.magicmodbuns.util.PatternTextureLoader;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +41,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
     private List<Line> lines = new ArrayList<>();
     private Dot selectedDot = null;
     private Dot hoveredDot = null;
+    private PatternObject patternObject = new PatternObject();
 
     public ChalkScreen(ChalkMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle != null ? pTitle : Component.literal("Chalk Menu"));
@@ -141,16 +158,15 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
                     System.out.println("Clicked Dot: (" + i + ", " + j + ")");
 
                     if (selectedDot == null) {
-
                         selectedDot = clickedDot;
 
                         System.out.println("Selected Dot: (" + selectedDot.gridX + ", " + selectedDot.gridY + ")");
                     } else {
-
                         System.out.println("Trying to connect: (" + selectedDot.gridX + ", " + selectedDot.gridY + ") to (" + clickedDot.gridX + ", " + clickedDot.gridY + ")");
 
                         // Check: Only allow connections to adjacent dots
                         if (isAdjacent(selectedDot, clickedDot)) {
+                            patternObject.addLine(selectedDot, clickedDot);
                             lines.add(new Line(selectedDot, clickedDot));
 
                             System.out.println("Line stored! Total lines: " + lines.size());
@@ -211,5 +227,38 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         int dx = Math.abs(dot1.gridX - dot2.gridX);
         int dy = Math.abs(dot1.gridY - dot2.gridY);
         return (dx <= 1 && dy <= 1) && (dx + dy > 0); // Allow adjacent and diagonal, but not same dot
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+
+        if (minecraft != null && minecraft.player != null) {
+            Player player = minecraft.player;
+
+            //find block placement position
+            BlockHitResult hitResult = (BlockHitResult) player.pick(5, 0, false);
+            BlockPos placePos = hitResult.getBlockPos().relative(hitResult.getDirection());
+
+            // Generate texture from pattern
+            BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(patternObject);
+            String textureFileName = "pattern_" + placePos.getX() + "_" + placePos.getY() + "_" + placePos.getZ();
+
+            PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
+            PatternTextureLoader.loadGeneratedTexture(textureFileName);
+
+            // Place the block with the stored pattern
+            if (player.level().getBlockState(placePos).isAir()) {
+                player.level().setBlock(placePos, ModBlocks.CHALK_PATTERN.get().defaultBlockState(), 1);
+                BlockEntity be = player.level().getBlockEntity(placePos);
+
+                if (be instanceof ChalkPatternBlockEntity chalkBlock) {
+                    chalkBlock.setPattern(patternObject); // Assign an actual pattern
+                    chalkBlock.setTexturePath("generated_textures/" + textureFileName + ".png");
+                    chalkBlock.syncWithClient();
+                    chalkBlock.setChanged();
+                }
+            }
+        }
     }
 }

@@ -27,6 +27,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> RAW_LIMESTONE = registerBlock("raw_limestone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.ANDESITE)
                     .strength(2f).requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> CHALK_PATTERN = registerBlock("chalk_pattern",
+            () -> new ChalkPatternBlock(BlockBehaviour.Properties.of().noLootTable().noOcclusion()));
     public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle",
             () -> new MortarAndPestleBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
     public static final RegistryObject<Block> POTION_BOTTLE_BLOCK = registerBlock("potion_bottle",
