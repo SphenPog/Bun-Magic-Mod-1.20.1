@@ -1,7 +1,6 @@
 package net.sphen.magicmodbuns.item.custom;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,8 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.NetworkHooks;
 import net.sphen.magicmodbuns.screen.ModSceenProvider;
-import net.sphen.magicmodbuns.util.ModTags;
-
 
 public class ChalkItem extends Item {
     public ChalkItem(Properties pProperties) {

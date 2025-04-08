@@ -20,11 +20,17 @@ public class PatternObject {
                     .append(line.end.gridX).append(",").append(line.end.gridY)
                     .append(";");
         }
+        System.out.println("Storing Pattern Data: " + data.toString());
         return data.toString();
     }
 
     public static PatternObject loadData(String data) {
+        System.out.println("Loading Pattern Data: " + data);
+
         PatternObject pattern = new PatternObject();
+        if (data == null || data.isEmpty()){
+            return pattern;
+        }
         String[] lineData = data.split(";");
         for (String entry : lineData) {
             if (!entry.isEmpty()) {

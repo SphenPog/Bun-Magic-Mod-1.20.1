@@ -16,24 +16,12 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class ChalkPatternBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public ChalkPatternBlock(Properties pProperties) {
         super(pProperties);
-    }
-
-    @Override
-    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pMovedByPiston) {
-        super.onPlace(pState, pLevel, pPos, pOldState, pMovedByPiston);
-        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-        if (blockEntity instanceof ChalkPatternBlockEntity chalkBlockEntity) {
-            System.out.println("Block entity found at placement!");
-        } else {
-            System.out.println("Block entity NOT found at placement!");
-        }
     }
 
     @Override

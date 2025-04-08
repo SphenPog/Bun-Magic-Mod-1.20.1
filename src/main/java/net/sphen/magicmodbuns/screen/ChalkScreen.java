@@ -14,16 +14,20 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
+import net.sphen.magicmodbuns.item.custom.ChalkItem;
 import net.sphen.magicmodbuns.screen.elements.Dot;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.BlockPlacementHelper;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
+import net.sphen.magicmodbuns.util.PlaceChalkPatternPacket;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -247,17 +251,11 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
             PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
             PatternTextureLoader.loadGeneratedTexture(textureFileName);
 
+            String patternData = patternObject.storeData();
+
             // Place the block with the stored pattern
             if (player.level().getBlockState(placePos).isAir()) {
-                player.level().setBlock(placePos, ModBlocks.CHALK_PATTERN.get().defaultBlockState(), 1);
-                BlockEntity be = player.level().getBlockEntity(placePos);
-
-                if (be instanceof ChalkPatternBlockEntity chalkBlock) {
-                    chalkBlock.setPattern(patternObject); // Assign an actual pattern
-                    chalkBlock.setTexturePath("generated_textures/" + textureFileName + ".png");
-                    chalkBlock.syncWithClient();
-                    chalkBlock.setChanged();
-                }
+                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, "generated_textures/" + textureFileName + ".png"));
             }
         }
     }

@@ -7,6 +7,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -20,6 +22,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
@@ -27,6 +32,7 @@ import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
 import net.sphen.magicmodbuns.screen.*;
+import net.sphen.magicmodbuns.util.PlaceChalkPatternPacket;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -37,6 +43,13 @@ public class MagicMod
     public static final String MODID = "magicmodbuns";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+    // Register the networking channel
+    public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(MODID, "network_channel"),
+            () -> "1", // protocol version
+            s -> true,  // message validator
+            s -> true   // message validator
+    );
 
     public MagicMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
@@ -61,6 +74,8 @@ public class MagicMod
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        // Register network packets
+        NETWORK.registerMessage(0, PlaceChalkPatternPacket.class, PlaceChalkPatternPacket::encode, PlaceChalkPatternPacket::decode, PlaceChalkPatternPacket::handle);
     }
 
     // Add the example block item to the building blocks tab

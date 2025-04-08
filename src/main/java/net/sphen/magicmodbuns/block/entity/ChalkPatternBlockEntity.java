@@ -23,25 +23,27 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         super(ModBlockEntities.CHALK_PATTERN.get(), pPos, pBlockState);
         this.pattern = new PatternObject();
         this.texturePath = null;
+        getTexturePath();
         setChanged();
+        syncWithClient();
         System.out.println("ChalkPatternBlockEntity CREATED at " + pPos);
     }
 
     public void setPattern(PatternObject pattern) {
-        this.pattern = pattern;
-        setChanged();
-        if (level != null && !level.isClientSide()) {
-            syncWithClient(); // Ensures the update is synced with the client
+        if (pattern == null) {
+            this.pattern = new PatternObject();  // Make sure pattern is always initialized
+            System.out.println("pattern is null when setting");
+        } else {
+            this.pattern = pattern;
         }
+        setChanged();
+        syncWithClient();
     }
 
     public void setTexturePath(String texturePath) {
         this.texturePath = new ResourceLocation(MagicMod.MODID, texturePath);
         setChanged();
-
-        if (level != null && !level.isClientSide()) {
-            syncWithClient();
-        }
+        syncWithClient();
     }
 
     public ResourceLocation getTexturePath() {
@@ -51,17 +53,13 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
+        saveAdditional(tag);
         System.out.println("getUpdateTag called for ChalkPatternBlockEntity at " + worldPosition);
-        tag.putString("patternData", pattern.storeData());
-        if (texturePath != null) {
-            tag.putString("texturePath", texturePath.toString());
-        }
         return tag;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
         System.out.println("Loading data for ChalkPatternBlockEntity at " + worldPosition);
         load(tag);
     }
@@ -92,6 +90,8 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         // Save pattern data
         if (pattern != null) {
             String patternData = pattern.storeData();
+            System.out.println(pattern.getLines() + "pattern lines");
+            System.out.println(patternData.toString() + "pattern data");
             if (!patternData.isEmpty()) {
                 pTag.putString("patternData", patternData);
                 System.out.println("Pattern Data Saved: " + patternData);
@@ -99,40 +99,45 @@ public class ChalkPatternBlockEntity extends BlockEntity {
                 System.out.println("⚠ Warning: Pattern Data is EMPTY when saving!");
             }
         } else {
-            System.out.println("Pattern is NULL when saving!");
+            System.out.println("pattern = null");
         }
 
         // Save texture path
         if (texturePath != null) {
             pTag.putString("texturePath", texturePath.toString());
         } else {
-            System.out.println("⚠ Warning: Texture Path is NULL when saving!");
+            System.out.println("texture = null");
         }
     }
 
     @Override
     public void load(CompoundTag pTag) {
+        if (pTag == null) {
+            System.out.println("tag is null upon load!!");
+            return;
+        }
+
         super.load(pTag);
         System.out.println("Loading ChalkPatternBlockEntity at " + worldPosition);
 
+        // Load pattern data
         if (pTag.contains("patternData")) {
             String data = pTag.getString("patternData");
             if (!data.isEmpty()) {
-                System.out.println("Loaded pattern data: " + data);
                 pattern = PatternObject.loadData(data);
+                System.out.println("Loaded pattern data: " + data);
             } else {
-                System.out.println("⚠ Warning: Loaded pattern data was EMPTY!");
+                System.out.println("⚠ Warning: Pattern data is empty when loading!");
             }
-        } else {
-            System.out.println("No 'patternData' found in CompoundTag.");
         }
 
+        // Load texture path
         if (pTag.contains("texturePath")) {
             texturePath = new ResourceLocation(pTag.getString("texturePath"));
             System.out.println("Loaded texture path: " + texturePath);
-        } else {
-            System.out.println("⚠ Warning: No 'texturePath' found in CompoundTag.");
         }
+
+        syncWithClient();
     }
 
     @Override
