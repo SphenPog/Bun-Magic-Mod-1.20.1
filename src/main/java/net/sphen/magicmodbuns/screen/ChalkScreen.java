@@ -35,6 +35,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
     private Dot hoveredDot = null;
     private boolean isDragging = false;
     private boolean isErasing = false;
+    private int activeMouseButton = -1; // 0 = left, 1 = right, 2 = middle
     private Dot lastHoveredDot = null;
     private PatternObject patternObject = new PatternObject();
 
@@ -129,16 +130,68 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
             int endX = GRID_X + (line.end.gridX * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
             int endY = GRID_Y + (line.end.gridY * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
 
-            //System.out.println("Drawing line from (" + startX + ", " + startY + ") to (" + endX + ", " + endY + ")");
-
-            drawLine(guiGraphics, startX, startY, endX, endY, 0xFFFF0000);
+            drawLine(guiGraphics, startX, startY, endX, endY, 0xFFFF0000, line.curved);
         }
     }
 
+    private void drawLine(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY, int color, boolean curved) {
+        int thickness = 2; // Adjust thickness if needed
+        if (curved) {
+            // Draw a curved line using the quadratic curve logic if the line is marked as curved
+            drawCurvedLine(guiGraphics, startX, startY, endX, endY, color, thickness);
+        } else {
+            // Otherwise, draw a straight line
+            if (startX == endX) {
+                // Vertical line
+                guiGraphics.fill(startX - thickness / 2, startY, startX + thickness / 2, endY, color);
+            } else if (startY == endY) {
+                // Horizontal line
+                guiGraphics.fill(startX, startY - thickness / 2, endX, startY + thickness / 2, color);
+            } else {
+                int steps = Math.max(Math.abs(endX - startX), Math.abs(endY - startY));
+                for (int i = 0; i <= steps; i++) {
+                    int x = startX + i * (endX - startX) / steps;
+                    int y = startY + i * (endY - startY) / steps;
+                    guiGraphics.fill(x, y, x + thickness, y + thickness, color);
+                }
+            }
+        }
+    }
+
+    private void drawCurvedLine(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY, int color, int thickness) {
+        float curveStrength = 1f; // <-- Adjust this to increase curve height
+
+        // Midpoint
+        int midX = (startX + endX) / 2;
+        int midY = (startY + endY) / 2;
+
+        // Perpendicular offset
+        float dx = endY - startY;
+        float dy = -(endX - startX);
+
+        // Normalize the perpendicular vector
+        float length = (float) Math.sqrt(dx * dx + dy * dy);
+        float offsetX = (dx / length) * curveStrength * length / 2;
+        float offsetY = (dy / length) * curveStrength * length / 2;
+
+        // Apply offset to midpoint
+        float controlX = midX + offsetX;
+        float controlY = midY + offsetY;
+
+        for (float t = 0; t <= 1; t += 0.01f) {
+            float x = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
+            float y = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+
+            guiGraphics.fill((int) x, (int) y, (int) x + thickness, (int) y + thickness, color);
+        }
+    }
+
+
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (button == 0) { // Left click
-            isDragging = true;
+        isDragging = true;
+
+        if (button == 0 || button == 2) { // Left click or middle click
 
             for (int i = 0; i < GRID_SIZE; i++) {
                 for (int j = 0; j < GRID_SIZE; j++) {
@@ -155,11 +208,14 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
 
                         if (selectedDot == null) {
                             selectedDot = hovered;
+                            activeMouseButton = button;
                         } else if (!hovered.equals(selectedDot) && isAdjacent(selectedDot, hovered)) {
                             // Only add the line if not already connected
-                            Line newLine = new Line(selectedDot, hovered);
+                            boolean isCurved = activeMouseButton == 2;
+                            Line newLine = new Line(selectedDot, hovered, isCurved);
+
                             if (!lines.contains(newLine)) {
-                                patternObject.addLine(selectedDot, hovered);
+                                patternObject.addLine(selectedDot, hovered, isCurved);
                                 lines.add(newLine);
                             }
 
@@ -193,9 +249,10 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (button == 0 || button == 2) {
             isDragging = false;
             selectedDot = null;
+            activeMouseButton = -1;
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
@@ -220,6 +277,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
 
                     if (selectedDot == null) {
                         selectedDot = clickedDot;
+                        activeMouseButton = pButton;
 
                         System.out.println("Selected Dot: (" + selectedDot.gridX + ", " + selectedDot.gridY + ")");
                     }
@@ -250,25 +308,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
             }
         }
     }
-
-    private void drawLine(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY, int color) {
-        int thickness = 2; // Adjust thickness if needed
-        if (startX == endX) {
-            // Vertical line
-            guiGraphics.fill(startX - thickness / 2, startY, startX + thickness / 2, endY, color);
-        } else if (startY == endY) {
-            // Horizontal line
-            guiGraphics.fill(startX, startY - thickness / 2, endX, startY + thickness / 2, color);
-        } else {
-            // Diagonal or general case
-            int steps = Math.max(Math.abs(endX - startX), Math.abs(endY - startY));
-            for (int i = 0; i <= steps; i++) {
-                int x = startX + i * (endX - startX) / steps;
-                int y = startY + i * (endY - startY) / steps;
-                guiGraphics.fill(x, y, x + thickness, y + thickness, color);
-            }
-        }
-    }
+    
 
     private boolean isAdjacent(Dot dot1, Dot dot2) {
         int dx = Math.abs(dot1.gridX - dot2.gridX);

@@ -7,6 +7,7 @@ import net.sphen.magicmodbuns.screen.elements.PatternObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +38,41 @@ public class PatternTextureGenerator {
             int endX = (line.end.gridX + 1) * DOT_SPACING;
             int endY = (line.end.gridY + 1) * DOT_SPACING;
 
-            g.drawLine(startX, startY, endX, endY);
+            if (line.curved){
+                // Calculate a control point — this creates a gentle arc
+                int ctrlX = (startX + endX) / 2 + (startY - endY) / 4;
+                int ctrlY = (startY + endY) / 2 + (endX - startX) / 4;
+
+                // Compute the midpoint
+                double midX = (startX + endX) / 2.0;
+                double midY = (startY + endY) / 2.0;
+
+                // Direction vector
+                double dx = endX - startX;
+                double dy = endY - startY;
+                double length = Math.sqrt(dx * dx + dy * dy);
+
+                if (length == 0) continue; // Avoid zero-length lines
+
+                // Perpendicular vector (flipped!)
+                double normX = dy / length;
+                double normY = -dx / length;
+
+                // Curve offset strength — tweak this for curvature intensity
+                double curveOffset = 6.0;
+
+                // Control point for the quadratic curve
+                double controlX = midX + normX * curveOffset;
+                double controlY = midY + normY * curveOffset;
+
+                // Use a GeneralPath to draw the curved line
+                GeneralPath path = new GeneralPath();
+                path.moveTo(startX, startY);
+                path.quadTo(controlX, controlY, endX, endY);
+                g.draw(path);
+            } else {
+                g.drawLine(startX, startY, endX, endY);
+            }
         }
 
         g.dispose();

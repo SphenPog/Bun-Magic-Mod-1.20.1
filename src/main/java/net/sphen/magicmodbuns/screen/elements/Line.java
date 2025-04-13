@@ -4,10 +4,16 @@ public class Line {
 
     public Dot start;
     public Dot end;
+    public final boolean curved;
 
     public Line(Dot start, Dot end) {
+        this(start, end, false); // default to straight
+    }
+
+    public Line(Dot start, Dot end, boolean curved) {
         this.start = start;
         this.end = end;
+        this.curved = curved;
     }
 
     @Override

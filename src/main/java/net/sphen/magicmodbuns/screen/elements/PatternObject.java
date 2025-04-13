@@ -7,8 +7,8 @@ public class PatternObject {
 
     private final List<Line> lines = new ArrayList<>();
 
-    public void addLine(Dot start, Dot end) {
-        lines.add(new Line(start, end));
+    public void addLine(Dot start, Dot end, boolean curved) {
+        lines.add(new Line(start, end, curved));
     }
 
     //store pattern in text format
@@ -18,6 +18,7 @@ public class PatternObject {
             data.append(line.start.gridX).append(",").append(line.start.gridY)
                     .append("->")
                     .append(line.end.gridX).append(",").append(line.end.gridY)
+                    .append(line.curved ? ":c" : "")
                     .append(";");
         }
         System.out.println("Storing Pattern Data: " + data.toString());
@@ -36,11 +37,12 @@ public class PatternObject {
             if (!entry.isEmpty()) {
                 String[] points = entry.split("->");
                 String[] startCoords = points[0].split(",");
-                String[] endCoords = points[1].split(",");
+                boolean curved = points[1].contains(":c");
+                String[] endCoords = points[1].replace(":c", "").split(",");
 
                 Dot start = new Dot(Integer.parseInt(startCoords[0]), Integer.parseInt(startCoords[1]));
                 Dot end = new Dot(Integer.parseInt(endCoords[0]), Integer.parseInt(endCoords[1]));
-                pattern.addLine(start, end);
+                pattern.addLine(start, end, curved);
             }
         }
         return pattern;
