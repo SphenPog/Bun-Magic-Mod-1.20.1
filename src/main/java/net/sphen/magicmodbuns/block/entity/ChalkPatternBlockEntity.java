@@ -11,9 +11,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.PatternTextureLoader;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
 
 public class ChalkPatternBlockEntity extends BlockEntity {
     private PatternObject pattern;
@@ -135,6 +139,16 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         if (pTag.contains("texturePath")) {
             texturePath = new ResourceLocation(pTag.getString("texturePath"));
             System.out.println("Loaded texture path: " + texturePath);
+
+            // Attempt to reload the texture here
+            String filename = texturePath.getPath().replace("generated_textures/", ""); // Remove prefix to get filename
+            ResourceLocation result = PatternTextureLoader.loadGeneratedTexture(filename.replace(".png", ""));
+            if (result != null) {
+                texturePath = result; // Update to use registered texture location
+                System.out.println("✅ Successfully reloaded texture: " + texturePath);
+            } else {
+                System.err.println("❌ Failed to reload texture for: " + filename);
+            }
         }
 
         syncWithClient();
@@ -148,5 +162,35 @@ public class ChalkPatternBlockEntity extends BlockEntity {
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
         invalidateCaps();
+    }
+
+    public void deleteAssociatedTexture() {
+
+        if (texturePath == null) {
+            System.out.println("⚠ No texture path to delete.");
+            return;
+            }
+
+        String path = texturePath.getPath();
+
+        if (!path.startsWith("generated_textures/")) {
+            System.out.println("⚠ Texture path is not from generated folder: " + path);
+            return;
+        }
+
+        // Extract filename and delete the corresponding file
+        String filename = path.substring("generated_textures/".length()); // e.g., "pattern_abc123"
+
+        File file = new File(FMLPaths.GAMEDIR.get().resolve("generated_textures").toFile(), filename.replace(".png", "") + ".png");
+
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("🗑 Deleted texture file: " + file.getAbsolutePath());
+            } else {
+                System.err.println("❌ Failed to delete texture file: " + file.getAbsolutePath());
+            }
+        } else {
+            System.out.println("⚠ Texture file not found during deletion: " + file.getAbsolutePath());
+        }
     }
 }

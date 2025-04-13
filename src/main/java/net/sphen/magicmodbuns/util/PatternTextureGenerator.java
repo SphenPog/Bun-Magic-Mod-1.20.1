@@ -1,6 +1,7 @@
 package net.sphen.magicmodbuns.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class PatternTextureGenerator {
     private static final int SIZE = 64; // Texture size
@@ -56,7 +58,13 @@ public class PatternTextureGenerator {
     }
 
     public static void saveTextureToFile(BufferedImage image, String fileName) {
-        File dir = new File("generated_textures");
+        // This gets the main Minecraft directory (e.g., `.minecraft` or your modded instance folder)
+        Path gameDir = FMLPaths.GAMEDIR.get();
+
+        // You can also create your own subfolder within it, like "generated_textures"
+        Path textureDir = gameDir.resolve("generated_textures");
+        File dir = textureDir.toFile();
+
         if (!dir.exists()) {
             dir.mkdirs();
         }

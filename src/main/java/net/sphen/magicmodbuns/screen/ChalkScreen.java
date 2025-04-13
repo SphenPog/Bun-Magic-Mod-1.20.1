@@ -1,30 +1,18 @@
 package net.sphen.magicmodbuns.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.block.ModBlocks;
-import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
-import net.sphen.magicmodbuns.item.custom.ChalkItem;
 import net.sphen.magicmodbuns.screen.elements.Dot;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
-import net.sphen.magicmodbuns.util.BlockPlacementHelper;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
 import net.sphen.magicmodbuns.util.PlaceChalkPatternPacket;
@@ -45,6 +33,9 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
     private List<Line> lines = new ArrayList<>();
     private Dot selectedDot = null;
     private Dot hoveredDot = null;
+    private boolean isDragging = false;
+    private boolean isErasing = false;
+    private Dot lastHoveredDot = null;
     private PatternObject patternObject = new PatternObject();
 
     public ChalkScreen(ChalkMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -144,9 +135,75 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (button == 0) { // Left click
+            isDragging = true;
+
+            for (int i = 0; i < GRID_SIZE; i++) {
+                for (int j = 0; j < GRID_SIZE; j++) {
+                    int x = GRID_X + i * (DOT_SIZE + SPACING);
+                    int y = GRID_Y + j * (DOT_SIZE + SPACING);
+                    int centerX = x + DOT_SIZE / 2;
+                    int centerY = y + DOT_SIZE / 2;
+                    int radius = DOT_SIZE / 2;
+
+                    double distance = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
+
+                    if (distance <= radius) {
+                        Dot hovered = new Dot(i, j);
+
+                        if (selectedDot == null) {
+                            selectedDot = hovered;
+                        } else if (!hovered.equals(selectedDot) && isAdjacent(selectedDot, hovered)) {
+                            // Only add the line if not already connected
+                            Line newLine = new Line(selectedDot, hovered);
+                            if (!lines.contains(newLine)) {
+                                patternObject.addLine(selectedDot, hovered);
+                                lines.add(newLine);
+                            }
+
+                            selectedDot = hovered;
+                        }
+                        return true;
+                    }
+                }
+            }
+        } else if (button == 1) { // Right click - erasing
+            isErasing = true;
+
+            // Check if the mouse is near any existing line to erase
+            for (int i = 0; i < lines.size(); i++) {
+                Line line = lines.get(i);
+                int startX = GRID_X + (line.start.gridX * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
+                int startY = GRID_Y + (line.start.gridY * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
+                int endX = GRID_X + (line.end.gridX * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
+                int endY = GRID_Y + (line.end.gridY * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
+
+                if (isMouseNearLine(mouseX, mouseY, startX, startY, endX, endY)) {
+                    lines.remove(i);
+                    patternObject.removeLine(line);
+                    return true;
+                }
+            }
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            isDragging = false;
+            selectedDot = null;
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+
+        //Sets the dot clicked as hovered (for user experience)
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 int x = GRID_X + i * (DOT_SIZE + SPACING);
@@ -165,20 +222,6 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
                         selectedDot = clickedDot;
 
                         System.out.println("Selected Dot: (" + selectedDot.gridX + ", " + selectedDot.gridY + ")");
-                    } else {
-                        System.out.println("Trying to connect: (" + selectedDot.gridX + ", " + selectedDot.gridY + ") to (" + clickedDot.gridX + ", " + clickedDot.gridY + ")");
-
-                        // Check: Only allow connections to adjacent dots
-                        if (isAdjacent(selectedDot, clickedDot)) {
-                            patternObject.addLine(selectedDot, clickedDot);
-                            lines.add(new Line(selectedDot, clickedDot));
-
-                            System.out.println("Line stored! Total lines: " + lines.size());
-                        } else {
-                            System.out.println("Invalid connection. Dots are too far.");
-                        }
-
-                        selectedDot = null;
                     }
                     return true;
                 }
@@ -231,6 +274,47 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         int dx = Math.abs(dot1.gridX - dot2.gridX);
         int dy = Math.abs(dot1.gridY - dot2.gridY);
         return (dx <= 1 && dy <= 1) && (dx + dy > 0); // Allow adjacent and diagonal, but not same dot
+    }
+
+    private boolean isMouseNearLine(double mouseX, double mouseY, int startX, int startY, int endX, int endY) {
+        double threshold = 5.0; // Set a distance threshold for "near" (tune as needed)
+
+        // Check distance from line segment
+        double distToLine = distanceFromLine(mouseX, mouseY, startX, startY, endX, endY);
+        return distToLine < threshold;
+    }
+
+    private double distanceFromLine(double x, double y, int x1, int y1, int x2, int y2) {
+        double A = x - x1;
+        double B = y - y1;
+        double C = x2 - x1;
+        double D = y2 - y1;
+
+        double dot = A * C + B * D;
+        double len_sq = C * C + D * D;
+        double param = -1.0;
+
+        if (len_sq != 0) { // In case of a non-zero length line segment
+            param = dot / len_sq;
+        }
+
+        double xx, yy;
+
+        if (param < 0) {
+            xx = x1;
+            yy = y1;
+        } else if (param > 1) {
+            xx = x2;
+            yy = y2;
+        } else {
+            xx = x1 + param * C;
+            yy = y1 + param * D;
+        }
+
+        double dx = x - xx;
+        double dy = y - yy;
+
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     @Override

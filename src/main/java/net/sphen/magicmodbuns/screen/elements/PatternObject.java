@@ -49,4 +49,8 @@ public class PatternObject {
     public List<Line> getLines(){
         return lines;
     }
+
+    public void removeLine(Line line) {
+        lines.remove(line);
+    }
 }
