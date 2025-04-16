@@ -15,8 +15,10 @@ public class PatternTextureLoader {
     public static ResourceLocation loadGeneratedTexture(String filename) {
         File file = new File(FMLPaths.GAMEDIR.get().resolve("generated_textures").toFile(), filename + ".png");
 
+        System.out.println(file.getAbsoluteFile());
+
         if (!file.exists()) {
-            System.err.println("Texture file does not exist: " + file.getAbsolutePath() + ".png");
+            System.err.println("Texture file does not exist: " + file.getAbsolutePath());
             return null;
         } else {
             System.out.println("passed first check in loadGeneratedTexture");

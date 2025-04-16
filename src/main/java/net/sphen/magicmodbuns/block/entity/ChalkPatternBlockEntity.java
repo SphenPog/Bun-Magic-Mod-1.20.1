@@ -14,9 +14,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class ChalkPatternBlockEntity extends BlockEntity {
@@ -66,13 +68,21 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     public void handleUpdateTag(CompoundTag tag) {
         System.out.println("Loading data for ChalkPatternBlockEntity at " + worldPosition);
         load(tag);
+
+        BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(this.pattern);
+        String textureFileName = this.texturePath.getPath().substring("generated_textures/".length()).replace(".png", "");
+        System.out.println(textureFileName);
+        PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
+        PatternTextureLoader.loadGeneratedTexture(textureFileName);
+        System.out.println("UpdateTag handler texture testing <---------");
     }
 
     @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
-        System.out.println("getUpdatePacket called for ChalkPatternBlockEntity at " + worldPosition);
-        return ClientboundBlockEntityDataPacket.create(this);
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return ClientboundBlockEntityDataPacket.create(this, be -> tag);
     }
 
     @Override

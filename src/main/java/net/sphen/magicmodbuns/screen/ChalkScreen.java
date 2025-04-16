@@ -379,7 +379,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
 
             // Place the block with the stored pattern
             if (player.level().getBlockState(placePos).isAir()) {
-                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, "generated_textures/" + textureFileName + ".png"));
+                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, "generated_textures/" + textureFileName));
             }
         }
     }
