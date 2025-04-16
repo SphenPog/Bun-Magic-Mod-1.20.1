@@ -1,18 +1,11 @@
 package net.sphen.magicmodbuns;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.texture.SimpleTexture;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterNamedRenderTypesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -24,14 +17,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
-import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
-import net.sphen.magicmodbuns.screen.*;
+import net.sphen.magicmodbuns.screen.ChalkScreen;
+import net.sphen.magicmodbuns.screen.ModMenuTypes;
+import net.sphen.magicmodbuns.screen.MortarPestleScreen;
 import net.sphen.magicmodbuns.util.PlaceChalkPatternPacket;
 import org.slf4j.Logger;
 
