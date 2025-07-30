@@ -93,10 +93,10 @@ public class PatternTextureGenerator {
     }
 
     public static void saveTextureToFile(BufferedImage image, String fileName) {
-        // This gets the main Minecraft directory (e.g., `.minecraft` or your modded instance folder)
+        //gets the main Minecraft directory
         Path gameDir = FMLPaths.GAMEDIR.get();
 
-        // You can also create your own subfolder within it, like "generated_textures"
+        //creates a subfolder within it "generated_textures"
         Path textureDir = gameDir.resolve("generated_textures");
         File dir = textureDir.toFile();
 

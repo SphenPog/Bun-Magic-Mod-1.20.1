@@ -26,7 +26,6 @@ public class PatternObject {
     }
 
     public static PatternObject loadData(String data) {
-        System.out.println("Loading Pattern Data: " + data);
 
         PatternObject pattern = new PatternObject();
         if (data == null || data.isEmpty()){

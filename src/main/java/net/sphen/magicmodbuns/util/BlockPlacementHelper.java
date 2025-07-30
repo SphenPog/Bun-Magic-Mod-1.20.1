@@ -16,8 +16,7 @@ public class BlockPlacementHelper {
 
         if (pattern instanceof PatternObject){
             System.out.println("pattern received (block placement helper data:) <----");
-            System.out.println(pattern.getLines());
-            System.out.println("______");
+            System.out.println(pattern.getLines().size() + " - amount of lines. Lines: " + pattern.getLines());
             System.out.println(texturePath.toString());
         }
 

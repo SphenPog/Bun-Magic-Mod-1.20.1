@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
-public class ModSceenProvider implements MenuProvider {
+public class ModScreenProvider implements MenuProvider {
 
 
     @Override

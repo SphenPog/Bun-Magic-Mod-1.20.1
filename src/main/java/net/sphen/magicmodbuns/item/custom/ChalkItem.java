@@ -10,7 +10,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.NetworkHooks;
-import net.sphen.magicmodbuns.screen.ModSceenProvider;
+import net.sphen.magicmodbuns.screen.ModScreenProvider;
 
 public class ChalkItem extends Item {
     public ChalkItem(Properties pProperties) {
@@ -35,7 +35,7 @@ public class ChalkItem extends Item {
             Level world = pContext.getLevel();
 
             if(world.getBlockState(positionAbove) == Blocks.AIR.defaultBlockState()){
-                NetworkHooks.openScreen((ServerPlayer) player, new ModSceenProvider(), buf -> {});
+                NetworkHooks.openScreen((ServerPlayer) player, new ModScreenProvider(), buf -> {});
                 pContext.getItemInHand().setCount(pContext.getItemInHand().getCount() - 1);
             }
         }

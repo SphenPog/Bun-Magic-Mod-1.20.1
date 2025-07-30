@@ -8,12 +8,16 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.network.PacketDistributor;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
+import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
 import org.jetbrains.annotations.Nullable;
@@ -24,14 +28,14 @@ import java.io.File;
 public class ChalkPatternBlockEntity extends BlockEntity {
     private PatternObject pattern;
     private ResourceLocation texturePath;
+    private BlockPos pos;
 
     public ChalkPatternBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.CHALK_PATTERN.get(), pPos, pBlockState);
         this.pattern = new PatternObject();
+        this.pos = pPos;
         this.texturePath = null;
         getTexturePath();
-        setChanged();
-        syncWithClient();
         System.out.println("ChalkPatternBlockEntity CREATED at " + pPos);
     }
 
@@ -42,14 +46,10 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         } else {
             this.pattern = pattern;
         }
-        setChanged();
-        syncWithClient();
     }
 
     public void setTexturePath(String texturePath) {
         this.texturePath = new ResourceLocation(MagicMod.MODID, texturePath);
-        setChanged();
-        syncWithClient();
     }
 
     public ResourceLocation getTexturePath() {
@@ -104,8 +104,8 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         // Save pattern data
         if (pattern != null) {
             String patternData = pattern.storeData();
-            System.out.println(pattern.getLines() + "pattern lines");
-            System.out.println(patternData.toString() + "pattern data");
+            System.out.println(pattern.getLines() + " pattern lines");
+            System.out.println(patternData.toString() + " pattern data");
             if (!patternData.isEmpty()) {
                 pTag.putString("patternData", patternData);
                 System.out.println("Pattern Data Saved: " + patternData);
@@ -158,6 +158,14 @@ public class ChalkPatternBlockEntity extends BlockEntity {
                 System.out.println("✅ Successfully reloaded texture: " + texturePath);
             } else {
                 System.err.println("❌ Failed to reload texture for: " + filename);
+                System.err.println("Trying to recreate texture now!_________");
+
+                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern);
+                String textureFileName = "pattern_" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ();
+
+                PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
+                result = PatternTextureLoader.loadGeneratedTexture(textureFileName);
+                texturePath = result;
             }
         }
 
@@ -168,7 +176,6 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     public void onLoad() {
         super.onLoad();
         if (level != null && !level.isClientSide) {
-            syncWithClient();
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
         invalidateCaps();
@@ -191,7 +198,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         // Extract filename and delete the corresponding file
         String filename = path.substring("generated_textures/".length()); // e.g., "pattern_abc123"
 
-        File file = new File(FMLPaths.GAMEDIR.get().resolve("generated_textures").toFile(), filename.replace(".png", "") + ".png");
+        File file = new File(FMLPaths.GAMEDIR.get().resolve("generated_textures").toFile(), filename + ".png");
 
         if (file.exists()) {
             if (file.delete()) {
@@ -201,6 +208,16 @@ public class ChalkPatternBlockEntity extends BlockEntity {
             }
         } else {
             System.out.println("⚠ Texture file not found during deletion: " + file.getAbsolutePath());
+        }
+
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            RemoveChalkTexturePacket packet = new RemoveChalkTexturePacket(texturePath.toString());
+
+            serverLevel.getServer().getPlayerList().getPlayers().forEach(player ->
+                    MagicMod.NETWORK.sendToServer(packet)
+            );
+
+            System.out.println("Sent texture unload packet to all players: " + texturePath);
         }
     }
 }

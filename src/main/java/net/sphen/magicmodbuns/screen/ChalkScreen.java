@@ -15,7 +15,7 @@ import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
-import net.sphen.magicmodbuns.util.PlaceChalkPatternPacket;
+import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -368,18 +368,13 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
             BlockHitResult hitResult = (BlockHitResult) player.pick(5, 0, false);
             BlockPos placePos = hitResult.getBlockPos().relative(hitResult.getDirection());
 
-            // Generate texture from pattern
-            BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(patternObject);
+            // Generate texture path and store pattern data for packet
             String textureFileName = "pattern_" + placePos.getX() + "_" + placePos.getY() + "_" + placePos.getZ();
-
-            PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
-            PatternTextureLoader.loadGeneratedTexture(textureFileName);
-
             String patternData = patternObject.storeData();
 
             // Place the block with the stored pattern
             if (player.level().getBlockState(placePos).isAir()) {
-                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, "generated_textures/" + textureFileName));
+                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, textureFileName));
             }
         }
     }

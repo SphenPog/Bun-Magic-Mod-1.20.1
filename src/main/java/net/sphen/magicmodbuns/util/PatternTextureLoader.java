@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,8 +15,6 @@ public class PatternTextureLoader {
 
     public static ResourceLocation loadGeneratedTexture(String filename) {
         File file = new File(FMLPaths.GAMEDIR.get().resolve("generated_textures").toFile(), filename + ".png");
-
-        System.out.println(file.getAbsoluteFile());
 
         if (!file.exists()) {
             System.err.println("Texture file does not exist: " + file.getAbsolutePath());
