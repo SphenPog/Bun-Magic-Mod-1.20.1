@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.util.Packets.CloseBookPacket;
 
 public class SpellBookScreen extends AbstractContainerScreen<SpellBookMenu> {
 
@@ -26,5 +27,12 @@ public class SpellBookScreen extends AbstractContainerScreen<SpellBookMenu> {
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight + 9);
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+
+        MagicMod.NETWORK.sendToServer(new CloseBookPacket());
     }
 }

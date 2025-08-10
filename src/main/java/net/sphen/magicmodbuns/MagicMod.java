@@ -22,11 +22,11 @@ import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
-import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.ModMenuTypes;
+import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
-import net.sphen.magicmodbuns.screen.spellbook.SpellBookMenu;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
+import net.sphen.magicmodbuns.util.Packets.CloseBookPacket;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.Packets.SyncChalkPatternPacket;
@@ -75,6 +75,7 @@ public class MagicMod
         NETWORK.registerMessage(0, PlaceChalkPatternPacket.class, PlaceChalkPatternPacket::encode, PlaceChalkPatternPacket::decode, PlaceChalkPatternPacket::handle);
         NETWORK.registerMessage(1, SyncChalkPatternPacket.class, SyncChalkPatternPacket::encode, SyncChalkPatternPacket::decode, SyncChalkPatternPacket::handle);
         NETWORK.registerMessage(2, RemoveChalkTexturePacket.class, RemoveChalkTexturePacket::encode, RemoveChalkTexturePacket::decode, RemoveChalkTexturePacket::handle);
+        NETWORK.registerMessage(3, CloseBookPacket.class, CloseBookPacket::encode, CloseBookPacket::decode, CloseBookPacket::handle);
     }
 
     // Add the example block item to the building blocks tab

@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/air",
-  "textures": {
-    "texture": "magicmodbuns:block/chalk_pattern_base"
-  }
-}
