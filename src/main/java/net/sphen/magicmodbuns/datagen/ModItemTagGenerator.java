@@ -9,6 +9,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagGenerator extends ItemTagsProvider {

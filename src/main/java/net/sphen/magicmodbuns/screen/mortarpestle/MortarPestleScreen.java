@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.screen;
+package net.sphen.magicmodbuns.screen.mortarpestle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.screen;
+package net.sphen.magicmodbuns.screen.mortarpestle;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,6 +11,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.MortarAndPestleBlockEntity;
+import net.sphen.magicmodbuns.screen.ModMenuTypes;
 import org.jetbrains.annotations.Nullable;
 
 public class MortarPestleMenu extends AbstractContainerMenu {

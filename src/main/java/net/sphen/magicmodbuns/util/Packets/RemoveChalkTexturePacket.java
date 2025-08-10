@@ -22,7 +22,7 @@ public class RemoveChalkTexturePacket {
         return new RemoveChalkTexturePacket(buf.readUtf());
     }
 
-    //Fix this crap
+    //Deletes the related texture of the block provided in packet for all server members.
     public static void handle(RemoveChalkTexturePacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ResourceLocation texture = new ResourceLocation("magicmodbuns", packet.texturePath);

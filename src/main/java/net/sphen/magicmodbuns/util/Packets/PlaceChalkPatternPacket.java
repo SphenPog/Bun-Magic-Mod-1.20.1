@@ -41,7 +41,6 @@ public class PlaceChalkPatternPacket {
             BlockPlacementHelper.placeChalkPatternBlock(level, pos, pattern.loadData(message.getPatternData()), message.getTexturePath());
 
             // Send the Sync packet to the client, making sure the chunk is tracked
-            //REWORK THIS!!! maybe set it before the block is placed (like send it to all players then place it??)
             SyncChalkPatternPacket syncPacket = new SyncChalkPatternPacket(pos, message.getPatternData(), message.getTexturePath());
             MagicMod.NETWORK.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), syncPacket);
 

@@ -22,9 +22,11 @@ import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
-import net.sphen.magicmodbuns.screen.ChalkScreen;
+import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.ModMenuTypes;
-import net.sphen.magicmodbuns.screen.MortarPestleScreen;
+import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
+import net.sphen.magicmodbuns.screen.spellbook.SpellBookMenu;
+import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.Packets.SyncChalkPatternPacket;
@@ -95,7 +97,8 @@ public class MagicMod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             MenuScreens.register(ModMenuTypes.MORTAR_PESTLE_MENU.get(), MortarPestleScreen :: new);
-            MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen::new);
+            MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen :: new);
+            MenuScreens.register(ModMenuTypes.SPELL_BOOK_MENU.get(), SpellBookScreen :: new);
             BlockEntityRenderers.register(ModBlockEntities.CHALK_PATTERN.get(), context -> new ChalkPatternBlockRenderer());
         }
     }

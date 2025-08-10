@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
@@ -23,6 +22,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.CHALK);
         simpleItem(ModItems.LIMESTONE_CHUNK);
         simpleItem(ModItems.METAL_DETECTOR);
+
+        simpleItem(ModItems.SPELL_BOOK);
 
         simpleBlockItem(ModBlocks.POLISHED_LIMESTONE);
         simpleBlockItem(ModBlocks.RAW_LIMESTONE);

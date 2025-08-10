@@ -35,6 +35,7 @@ public class MortarAndPestleBlock extends BaseEntityBlock {
         super(pProperties);
     }
 
+    //overrides the use function to open the MortarPestalScreen
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
 
@@ -71,6 +72,7 @@ public class MortarAndPestleBlock extends BaseEntityBlock {
         pBuilder.add(FACING);
     }
 
+    //overrides the onRemove function to drop the containers held items.
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         if(pState.getBlock() != pNewState.getBlock()) {

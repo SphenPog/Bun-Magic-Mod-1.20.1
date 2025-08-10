@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.screen;
+package net.sphen.magicmodbuns.screen.chalk;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
-public class ModScreenProvider implements MenuProvider {
+public class ChalkScreenProvider implements MenuProvider {
 
 
     @Override

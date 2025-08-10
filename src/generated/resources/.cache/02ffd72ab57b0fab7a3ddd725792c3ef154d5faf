@@ -1,4 +1,4 @@
-// 1.20.1	2025-03-25T15:40:26.8012348	Item Models: magicmodbuns
+// 1.20.1	2025-08-02T15:47:35.0528594	Item Models: magicmodbuns
 a142810fae69dc4489473bbbf992f3482fb770e4 assets/magicmodbuns/models/item/chalk.json
 0df189843e5cf66e1e4fbe13a4d8264c92002a41 assets/magicmodbuns/models/item/chalk_pattern.json
 729eec21056124d14f9aeafc76abe67b830a550f assets/magicmodbuns/models/item/limestone_chunk.json
@@ -7,3 +7,4 @@ a142810fae69dc4489473bbbf992f3482fb770e4 assets/magicmodbuns/models/item/chalk.j
 a0664a7c08e8642be9e5ab81c9c97f2839bb14d3 assets/magicmodbuns/models/item/polished_limestone.json
 8d6593b4f93e9831eca0ed96f2247400c20a9f50 assets/magicmodbuns/models/item/potion_bottle.json
 df8bf7cea277c60a834f368d54469b90140956cd assets/magicmodbuns/models/item/raw_limestone.json
+71721dd6e00aed1dca89c68b8fc7fc1a32d7a1cb assets/magicmodbuns/models/item/spell_book.json

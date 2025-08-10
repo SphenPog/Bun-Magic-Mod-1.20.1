@@ -10,6 +10,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.screen.chalk.ChalkMenu;
+import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleMenu;
+import net.sphen.magicmodbuns.screen.spellbook.SpellBookMenu;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
@@ -17,6 +20,9 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<MortarPestleMenu>> MORTAR_PESTLE_MENU =
             registerMenuType("mortar_pestle_menu", MortarPestleMenu :: new);
+
+    public static final RegistryObject<MenuType<SpellBookMenu>> SPELL_BOOK_MENU =
+            registerMenuType("spell_book_menu", SpellBookMenu::new);
 
     public static final RegistryObject<MenuType<ChalkMenu>> CHALK_MENU =
             MENUS.register("chalk_menu", () -> new MenuType<>(ChalkMenu::new, FeatureFlags.VANILLA_SET));

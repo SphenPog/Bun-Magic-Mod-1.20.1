@@ -22,6 +22,8 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.LIMESTONE_CHUNK.get());
                         pOutput.accept(ModItems.METAL_DETECTOR.get());
 
+                        pOutput.accept(ModItems.SPELL_BOOK.get());
+
                         pOutput.accept(ModBlocks.POLISHED_LIMESTONE.get());
                         pOutput.accept(ModBlocks.RAW_LIMESTONE.get());
 

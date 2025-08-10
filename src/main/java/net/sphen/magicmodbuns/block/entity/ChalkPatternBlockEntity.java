@@ -8,15 +8,12 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.network.PacketDistributor;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
-import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
@@ -30,6 +27,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     private ResourceLocation texturePath;
     private BlockPos pos;
 
+    //constructor
     public ChalkPatternBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.CHALK_PATTERN.get(), pPos, pBlockState);
         this.pattern = new PatternObject();
@@ -39,6 +37,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         System.out.println("ChalkPatternBlockEntity CREATED at " + pPos);
     }
 
+    //takes pattern object and sets it if NOT null, otherwise creates new PatternObject for assignment.
     public void setPattern(PatternObject pattern) {
         if (pattern == null) {
             this.pattern = new PatternObject();  // Make sure pattern is always initialized
@@ -56,6 +55,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         return texturePath != null ? texturePath : new ResourceLocation(MagicMod.MODID, "textures/block/chalk_pattern_base.png");
     }
 
+    //overrides getUpdateTag to saveAdditional.
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
@@ -68,20 +68,13 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     public void handleUpdateTag(CompoundTag tag) {
         System.out.println("Loading data for ChalkPatternBlockEntity at " + worldPosition);
         load(tag);
-
-        BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(this.pattern);
-        String textureFileName = this.texturePath.getPath().substring("generated_textures/".length()).replace(".png", "");
-        System.out.println(textureFileName);
-        PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
-        PatternTextureLoader.loadGeneratedTexture(textureFileName);
-        System.out.println("UpdateTag handler texture testing <---------");
     }
 
     @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag);
+        saveAdditional(tag);
         return ClientboundBlockEntityDataPacket.create(this, be -> tag);
     }
 
@@ -96,6 +89,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         }
     }
 
+    //overrides saveAdditonal to store pattern data and texture path data in block.
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
@@ -124,6 +118,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         }
     }
 
+    //overrides load function to load pattern data and dynamically reload the generated pattern textures.
     @Override
     public void load(CompoundTag pTag) {
         if (pTag == null) {
@@ -181,6 +176,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         invalidateCaps();
     }
 
+    //gets filename of texture associated with block entity, deletes it, and sends delete packet to the server.
     public void deleteAssociatedTexture() {
 
         if (texturePath == null) {

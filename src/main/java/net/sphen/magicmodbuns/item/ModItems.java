@@ -8,6 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.item.custom.ChalkItem;
 import net.sphen.magicmodbuns.item.custom.MetalDetectorItem;
+import net.sphen.magicmodbuns.item.custom.SpellBookItem;
 
 public class ModItems {
 
@@ -16,6 +17,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> CHALK = ITEMS.register("chalk",
             () -> new ChalkItem(new Item.Properties()));
+
+    public static final RegistryObject<Item> SPELL_BOOK = ITEMS.register("spell_book",
+            () -> new SpellBookItem(new Item.Properties()));
     public static final RegistryObject<Item> LIMESTONE_CHUNK = ITEMS.register("limestone_chunk",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> METAL_DETECTOR = ITEMS.register("metal_detector",

@@ -23,7 +23,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.item.ModItems;
-import net.sphen.magicmodbuns.screen.MortarPestleMenu;
+import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,6 +88,7 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
         lazyItemHandler.invalidate();
     }
 
+    //specifies the contained items to be dropped when destroyed.
     public void drops(){
         SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++){
@@ -123,6 +124,7 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
         progress = pTag.getInt("mortar_and_pestle.progress");
     }
 
+    //each tick, increases crafting progress and checks if finished.
     public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
         if(hasRecipe()){
             increaseCraftingProgress();
@@ -137,10 +139,12 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
         }
     }
 
+    //used after crafting finishes
     private void resetProgress() {
         progress = 0;
     }
 
+    //removes ingredients and sets crafted item to output slot.
     private void craftItem() {
         ItemStack result = new ItemStack(ModItems.CHALK.get(), 1);
         this.itemHandler.extractItem(INPUT_SLOT, 1, false);
@@ -149,6 +153,7 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
                 this.itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + result.getCount()));
     }
 
+    //checks if the required resources are in the crafting slots.
     private boolean hasRecipe() {
         boolean hasCraftingItem = this.itemHandler.getStackInSlot(INPUT_SLOT).getItem() == ModBlocks.RAW_LIMESTONE.get().asItem();
         ItemStack result = new ItemStack(ModItems.CHALK.get());

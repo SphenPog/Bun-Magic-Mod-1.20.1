@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.screen;
+package net.sphen.magicmodbuns.screen.chalk;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,11 +13,8 @@ import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.Dot;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
-import net.sphen.magicmodbuns.util.PatternTextureGenerator;
-import net.sphen.magicmodbuns.util.PatternTextureLoader;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +36,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
     private Dot lastHoveredDot = null;
     private PatternObject patternObject = new PatternObject();
 
+    //constructor
     public ChalkScreen(ChalkMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle != null ? pTitle : Component.literal("Chalk Menu"));
         System.out.println("chalkScreen opened!");
@@ -49,6 +47,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         return false;
     }
 
+    //override to set grid size and spacing with initialize function
     @Override
     protected void init() {
         super.init();
@@ -63,6 +62,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         GRID_Y += 4;
     }
 
+    //set background color and the texture for the chalk drawing screen.
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -74,6 +74,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight + 9);
     }
 
+    //draw lines and update dots that user is selecting or going to select.
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
@@ -98,6 +99,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         drawGrid(guiGraphics);
     }
 
+    //draw all dots along grid to align with texture
     private void drawGrid(GuiGraphics guiGraphics) {
         //generating grid pattern (h=horizontal, v=vertical)
         for (int h = 0; h < GRID_SIZE; h++) {
@@ -112,8 +114,8 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
+    // Draw a circle by approximating it with filled pixels
     private void drawCircle(GuiGraphics guiGraphics, int centerX, int centerY, int radius, int color) {
-        // Draw a circle by approximating it with filled pixels
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 if (x * x + y * y <= radius * radius) {  // Check if the point (x, y) is within the circle's radius
@@ -123,6 +125,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
+    //draw each line in the list of lines.
     private void drawLines(GuiGraphics guiGraphics) {
         for (Line line : lines) {
             int startX = GRID_X + (line.start.gridX * (DOT_SIZE + SPACING)) + DOT_SIZE / 2;
@@ -134,6 +137,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
+    //decides if a line is curved or straight, then draws it accordingly.
     private void drawLine(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY, int color, boolean curved) {
         int thickness = 2; // Adjust thickness if needed
         if (curved) {
@@ -148,6 +152,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
                 // Horizontal line
                 guiGraphics.fill(startX, startY - thickness / 2, endX, startY + thickness / 2, color);
             } else {
+                //diagonal line
                 int steps = Math.max(Math.abs(endX - startX), Math.abs(endY - startY));
                 for (int i = 0; i <= steps; i++) {
                     int x = startX + i * (endX - startX) / steps;
@@ -158,6 +163,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
+    //calculate parabolic curve for curved lines.
     private void drawCurvedLine(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY, int color, int thickness) {
         float curveStrength = 1f; // <-- Adjust this to increase curve height
 
@@ -186,12 +192,12 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
 
-
+    //allows for drawing and erasing of lines when mouse is being dragged.
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         isDragging = true;
 
-        if (button == 0 || button == 2) { // Left click or middle click
+        if (button == 0 || button == 2) { // Left click or middle click - drawing
 
             for (int i = 0; i < GRID_SIZE; i++) {
                 for (int j = 0; j < GRID_SIZE; j++) {
@@ -247,6 +253,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
+    //update mouse when not clicked.
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0 || button == 2) {
@@ -257,6 +264,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    //update mouse when clicked and get approximate dot clicked.
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
 
@@ -288,6 +296,7 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
+    //check if mouse is over a dot when moving.
     @Override
     public void mouseMoved(double pMouseX, double pMouseY) {
         hoveredDot = null;
@@ -309,13 +318,14 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
         }
     }
     
-
+    //check if dots are 1 grid space away from each other.
     private boolean isAdjacent(Dot dot1, Dot dot2) {
         int dx = Math.abs(dot1.gridX - dot2.gridX);
         int dy = Math.abs(dot1.gridY - dot2.gridY);
         return (dx <= 1 && dy <= 1) && (dx + dy > 0); // Allow adjacent and diagonal, but not same dot
     }
 
+    //check if mouse is near line for deleting purposes.
     private boolean isMouseNearLine(double mouseX, double mouseY, int startX, int startY, int endX, int endY) {
         double threshold = 5.0; // Set a distance threshold for "near" (tune as needed)
 
