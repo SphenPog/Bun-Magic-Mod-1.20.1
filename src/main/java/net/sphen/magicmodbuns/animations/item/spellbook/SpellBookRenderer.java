@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.animations.item;
+package net.sphen.magicmodbuns.animations.item.spellbook;
 
 import net.sphen.magicmodbuns.item.custom.SpellBookItem;
 import software.bernie.geckolib.renderer.GeoItemRenderer;

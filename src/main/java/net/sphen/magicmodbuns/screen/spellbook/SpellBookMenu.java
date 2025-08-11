@@ -10,6 +10,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.sphen.magicmodbuns.screen.ModMenuTypes;
+import net.sphen.magicmodbuns.util.ModTags;
 
 public class SpellBookMenu extends AbstractContainerMenu {
     private final IItemHandler handler;
@@ -44,8 +45,41 @@ public class SpellBookMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        return null;
+    public ItemStack quickMoveStack(Player player, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+
+        if (slot != null && slot.hasItem()) {
+
+            ItemStack stackInSlot = slot.getItem();
+            itemstack = stackInSlot.copy();
+
+            int containerSlots = handler.getSlots();
+
+            if (index < containerSlots) {
+
+                if (!this.moveItemStackTo(stackInSlot, containerSlots, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+
+                if (stackInSlot.is(ModTags.Items.SPELL_BOOK_PAPER_TAG)) {
+                    if (!this.moveItemStackTo(stackInSlot, 0, containerSlots, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stackInSlot.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return itemstack;
     }
 
     @Override

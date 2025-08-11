@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.animations.item;
+package net.sphen.magicmodbuns.animations.item.spellbook;
 
 import net.minecraft.resources.ResourceLocation;
 import net.sphen.magicmodbuns.MagicMod;

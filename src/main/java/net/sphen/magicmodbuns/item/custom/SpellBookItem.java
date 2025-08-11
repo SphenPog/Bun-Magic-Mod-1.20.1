@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
-import net.sphen.magicmodbuns.animations.item.SpellBookRenderer;
+import net.sphen.magicmodbuns.animations.item.spellbook.SpellBookRenderer;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookItemStackHandler;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookMenu;
 import net.sphen.magicmodbuns.util.ModTags;
@@ -50,20 +50,22 @@ public class SpellBookItem extends Item implements GeoItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
+            ItemStack stack = player.getItemInHand(hand);
 
-        if(!pLevel.isClientSide()) {
-            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+            // Your open animation and GUI code here
+            this.triggerAnim(player, GeoItem.getId(stack), "controller", "open");
 
-            this.triggerAnim(pPlayer, GeoItem.getId(stack), "controller", "open");
-            isOpen = true;
-
-
-            NetworkHooks.openScreen((ServerPlayer) pPlayer, new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer1) ->
-                    new SpellBookMenu(pContainerId, pPlayerInventory, stack),
-                    Component.literal("Spell Book")), buf -> buf.writeItem(stack));
+            NetworkHooks.openScreen((ServerPlayer) player,
+                    new SimpleMenuProvider(
+                            (id, inv, p) -> new SpellBookMenu(id, inv, stack),
+                            Component.literal("Spell Book")
+                    ),
+                    buf -> buf.writeItem(stack)
+            );
         }
-        return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+        return InteractionResultHolder.pass(player.getItemInHand(hand)); // no swing animation
     }
 
     @Override
