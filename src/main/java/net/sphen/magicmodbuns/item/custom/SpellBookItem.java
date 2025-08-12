@@ -17,6 +17,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -80,9 +81,18 @@ public class SpellBookItem extends Item implements GeoItem {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+
+        SpellBookItemStackHandler itemHandler = new SpellBookItemStackHandler(9, ModTags.Items.SPELL_BOOK_PAPER_TAG);
+
+        if (nbt != null && nbt.contains("Inventory")) {
+            itemHandler.deserializeNBT(nbt.getCompound("Inventory"));
+        } else if (stack.hasTag() && stack.getTag().contains("Inventory")) {
+            itemHandler.deserializeNBT(stack.getTag().getCompound("Inventory"));
+        }
+
+
         return new ICapabilityProvider() {
-            private final LazyOptional<IItemHandler> handler = LazyOptional.of(() ->
-                    new SpellBookItemStackHandler(9, ModTags.Items.SPELL_BOOK_PAPER_TAG));
+            private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side){
@@ -126,5 +136,34 @@ public class SpellBookItem extends Item implements GeoItem {
                 return renderer;
             }
         });
+    }
+
+    @Override
+    public @Nullable CompoundTag getShareTag(ItemStack stack) {
+        CompoundTag nbt = super.getShareTag(stack);
+        if(nbt == null) {
+            nbt = new CompoundTag();
+        }
+
+            IItemHandler handler = stack.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
+            if (handler instanceof INBTSerializable<?> serializable) {
+                INBTSerializable<CompoundTag> nbtSerializable = (INBTSerializable<CompoundTag>) serializable;
+                nbt.put("Inventory", nbtSerializable.serializeNBT());
+            }
+
+        return nbt;
+    }
+
+    @Override
+    public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
+        super.readShareTag(stack, nbt);
+        if (nbt != null && nbt.contains("Inventory")) {
+            stack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+                if(handler instanceof INBTSerializable<?> serializable) {
+                    INBTSerializable<CompoundTag> nbtSerializable = (INBTSerializable<CompoundTag>) serializable;
+                    nbtSerializable.deserializeNBT(nbt.getCompound("Inventory"));
+                }
+            });
+        }
     }
 }
