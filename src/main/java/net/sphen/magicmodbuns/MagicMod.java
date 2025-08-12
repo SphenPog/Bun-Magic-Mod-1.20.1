@@ -17,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.sphen.magicmodbuns.animations.block.MortarAndPestleRenderer;
 import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
@@ -100,7 +101,10 @@ public class MagicMod
             MenuScreens.register(ModMenuTypes.MORTAR_PESTLE_MENU.get(), MortarPestleScreen :: new);
             MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen :: new);
             MenuScreens.register(ModMenuTypes.SPELL_BOOK_MENU.get(), SpellBookScreen :: new);
+
+            //custom block model initialization
             BlockEntityRenderers.register(ModBlockEntities.CHALK_PATTERN.get(), context -> new ChalkPatternBlockRenderer());
+            BlockEntityRenderers.register(ModBlockEntities.MORTAR_PESTLE.get(), pContext -> new MortarAndPestleRenderer());
         }
     }
 }

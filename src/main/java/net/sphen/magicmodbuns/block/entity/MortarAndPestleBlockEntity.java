@@ -3,7 +3,11 @@ package net.sphen.magicmodbuns.block.entity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -26,8 +30,15 @@ import net.sphen.magicmodbuns.item.ModItems;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 
-public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvider {
+public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvider, GeoBlockEntity {
     private final ItemStackHandler itemHandler = new ItemStackHandler(2);
 
     private static final int INPUT_SLOT = 0;
@@ -38,6 +49,9 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 78;
+    private boolean isAnimationPlaying = false;
+    private static final int animationLengthInTicks = 65; //length of animation (3.25) times ticks/sec (20)
+    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     public MortarAndPestleBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.MORTAR_PESTLE.get(), pPos, pBlockState);
@@ -113,6 +127,7 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
     protected void saveAdditional(CompoundTag pTag) {
         pTag.put("inventory", itemHandler.serializeNBT());
         pTag.putInt("mortar_and_pestle.progress", progress);
+        pTag.putBoolean("isAnimationPlaying", isAnimationPlaying);
 
         super.saveAdditional(pTag);
     }
@@ -122,20 +137,30 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
         super.load(pTag);
         itemHandler.deserializeNBT(pTag.getCompound("inventory"));
         progress = pTag.getInt("mortar_and_pestle.progress");
+        isAnimationPlaying = pTag.getBoolean("isAnimationPlaying");
     }
 
     //each tick, increases crafting progress and checks if finished.
     public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
+        boolean wasAnimationPlaying = isAnimationPlaying;
+
         if(hasRecipe()){
             increaseCraftingProgress();
             setChanged(pLevel, pPos, pState);
+            isAnimationPlaying = true;
 
             if(hasProgressFinished()){
                 craftItem();
                 resetProgress();
+                isAnimationPlaying = false;
             }
         } else {
             resetProgress();
+            isAnimationPlaying = false;
+        }
+
+        if (wasAnimationPlaying != isAnimationPlaying && pLevel != null && !pLevel.isClientSide) {
+            pLevel.sendBlockUpdated(pPos, pState, pState, 3);
         }
     }
 
@@ -175,5 +200,49 @@ public class MortarAndPestleBlockEntity extends BlockEntity implements MenuProvi
 
     private boolean canInsertAmountIntoOutputSlot(int count) {
         return this.itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + count <= this.itemHandler.getStackInSlot(OUTPUT_SLOT).getMaxStackSize();
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return ClientboundBlockEntityDataPacket.create(this, be -> tag);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+        handleUpdateTag(pkt.getTag());
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
+        this.load(tag);
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+        controllers.add(new AnimationController<>(this, "controller", 0, state -> {
+            RawAnimation craftingAnimation = RawAnimation.begin().thenPlay("crafting");
+
+            if (isAnimationPlaying) {
+                return state.setAndContinue(RawAnimation.begin().thenLoop("crafting"));
+            } else {
+                return PlayState.STOP;
+            }
+        }));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return this.level == null ? 0 : this.level.getGameTime();
     }
 }
