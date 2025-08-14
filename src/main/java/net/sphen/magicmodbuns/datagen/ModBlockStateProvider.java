@@ -47,6 +47,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 new ModelFile.UncheckedModelFile(modLoc("block/potion_bottle")));
         horizontalBlock(ModBlocks.CHALK_PATTERN.get(),
                 new ModelFile.UncheckedModelFile(modLoc("block/chalk_pattern")));
+        simpleBlock(ModBlocks.ALTAR_BLOCK.get(),
+                new ModelFile.UncheckedModelFile(modLoc("block/altar_block")));
     }
 
     private void leavesBlock(RegistryObject<Block> blockRegistryObject) {
