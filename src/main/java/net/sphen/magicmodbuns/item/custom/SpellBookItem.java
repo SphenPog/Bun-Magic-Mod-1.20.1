@@ -55,8 +55,8 @@ public class SpellBookItem extends Item implements GeoItem {
         if (!level.isClientSide()) {
             ItemStack stack = player.getItemInHand(hand);
 
-            // Your open animation and GUI code here
             this.triggerAnim(player, GeoItem.getId(stack), "controller", "open");
+            this.isOpen = true;
 
             NetworkHooks.openScreen((ServerPlayer) player,
                     new SimpleMenuProvider(
