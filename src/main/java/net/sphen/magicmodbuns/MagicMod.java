@@ -27,6 +27,7 @@ import net.sphen.magicmodbuns.screen.ModMenuTypes;
 import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
+import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
 import net.sphen.magicmodbuns.util.Packets.CloseBookPacket;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
@@ -65,6 +66,8 @@ public class MagicMod
 
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+
+        ModSpellEntities.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

@@ -21,6 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
+import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
+import net.sphen.magicmodbuns.spells.runes.RuneSearch;
 
 public class ChalkPatternBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -32,14 +34,23 @@ public class ChalkPatternBlock extends BaseEntityBlock {
     //override use function to allow players to rotate the chalk pattern once placed.
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        boolean sneaking = pPlayer.isShiftKeyDown();
 
         //gets new rotation direction
-        if(!pLevel.isClientSide){
+        if(!pLevel.isClientSide && !sneaking){
             Direction currentDirection = pState.getValue(FACING);
             Direction newDirection = currentDirection.getClockWise();
 
             pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING, newDirection));
+        } else if (!pLevel.isClientSide && sneaking) {
+            int radius = 8;
+            boolean diagonals = true;
+            RunePatternGraph graph = RuneSearch.findPattern(pLevel, pPos, radius, diagonals);
+
+            System.out.println(graph);
+            System.out.println(graph.getNodes());
         }
+
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }

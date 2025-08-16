@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.spells.runes.RuneType;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
@@ -21,11 +22,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.lang.annotation.ElementType;
 
 public class ChalkPatternBlockEntity extends BlockEntity {
     private PatternObject pattern;
     private ResourceLocation texturePath;
     private BlockPos pos;
+    private ElementType element;
+    private RuneType runeType;
 
     //constructor
     public ChalkPatternBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -215,5 +219,13 @@ public class ChalkPatternBlockEntity extends BlockEntity {
 
             System.out.println("Sent texture unload packet to all players: " + texturePath);
         }
+    }
+
+    public RuneType getRuneType() {
+        return runeType;
+    }
+
+    public ElementType getElementType() {
+        return element;
     }
 }
