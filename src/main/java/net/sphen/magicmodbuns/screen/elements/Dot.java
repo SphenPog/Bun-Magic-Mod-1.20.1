@@ -9,4 +9,14 @@ public class Dot {
         this.gridY = gridY;
 
     }
+
+    public int compareTo(Dot other) {
+         int comparison = Integer.compare(this.gridX, other.gridX);
+         return (comparison != 0) ? comparison : Integer.compare(this.gridY, other.gridY);
+    }
+
+    @Override
+    public String toString() {
+        return gridX + "," + gridY;
+    }
 }

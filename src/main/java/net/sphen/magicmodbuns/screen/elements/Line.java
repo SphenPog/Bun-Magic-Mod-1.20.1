@@ -11,8 +11,8 @@ public class Line {
     }
 
     public Line(Dot start, Dot end, boolean curved) {
-        this.start = start;
-        this.end = end;
+        this.start = (start.compareTo(end) <= 0) ? start : end;
+        this.end = (start.compareTo(end) <= 0) ? end : start;
         this.curved = curved;
     }
 
@@ -31,4 +31,9 @@ public class Line {
         return start.hashCode() + end.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return start.gridX + "," + start.gridY + "->" +
+                end.gridX + "," + end.gridY;
+    }
 }

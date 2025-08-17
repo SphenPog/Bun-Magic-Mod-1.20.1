@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,6 +29,7 @@ import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
+import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;
 import net.sphen.magicmodbuns.util.Packets.CloseBookPacket;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
@@ -71,6 +73,10 @@ public class MagicMod
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
+        MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> {
+            event.addListener(new RuneReloadListener());
+        });
 
     }
 

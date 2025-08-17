@@ -228,4 +228,8 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     public ElementType getElementType() {
         return element;
     }
+
+    public PatternObject getPattern() {
+        return pattern;
+    }
 }

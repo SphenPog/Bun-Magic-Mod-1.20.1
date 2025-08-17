@@ -2,12 +2,16 @@ package net.sphen.magicmodbuns.screen.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PatternObject {
 
     private final List<Line> lines = new ArrayList<>();
 
     public void addLine(Dot start, Dot end, boolean curved) {
+        Dot first = (start.compareTo(end) <= 0) ? start : end;
+        Dot second = (start.compareTo(end) <= 0) ? end : start;
+
         lines.add(new Line(start, end, curved));
     }
 
@@ -24,6 +28,8 @@ public class PatternObject {
         System.out.println("Storing Pattern Data: " + data.toString());
         return data.toString();
     }
+
+
 
     public static PatternObject loadData(String data) {
 
@@ -47,8 +53,29 @@ public class PatternObject {
         return pattern;
     }
 
-    public List<Line> getLines(){
+    public List<Line> getLines() {
         return lines;
+    }
+
+    public String getSortedLines(){
+        return lines.stream()
+                .sorted((a, b) -> {
+                    int comparison = Integer.compare(a.start.gridX, b.start.gridX);
+                    if (comparison != 0) return comparison;
+
+                    comparison = Integer.compare(a.start.gridY, b.start.gridY);
+                    if (comparison != 0) return comparison;
+
+                    comparison = Integer.compare(a.end.gridX, b.end.gridX);
+                    if (comparison != 0) return comparison;
+
+                    comparison = Integer.compare(a.end.gridY, b.end.gridY);
+                    if (comparison != 0) return comparison;
+
+                    return Boolean.compare(a.curved, b.curved);
+                })
+                .map(Line::toString)
+                .collect(Collectors.joining(";"));
     }
 
     public void removeLine(Line line) {
