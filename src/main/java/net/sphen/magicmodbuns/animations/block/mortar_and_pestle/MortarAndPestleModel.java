@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.animations.block;
+package net.sphen.magicmodbuns.animations.block.mortar_and_pestle;
 
 import net.minecraft.resources.ResourceLocation;
 import net.sphen.magicmodbuns.MagicMod;

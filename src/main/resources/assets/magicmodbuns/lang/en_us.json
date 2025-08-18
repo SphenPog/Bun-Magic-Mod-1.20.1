@@ -3,7 +3,7 @@
   "item.magicmodbuns.limestone_chunk": "Limestone Chunk",
   "item.magicmodbuns.metal_detector": "Metal Detector",
 
-  "item.magicmodbuns.animated_spell_book": "Spell Book",
+  "item.magicmodbuns.spell_book": "Spell Book",
 
   "block.magicmodbuns.polished_limestone": "Polished Limestone",
   "block.magicmodbuns.raw_limestone": "Raw Limestone",
@@ -17,7 +17,7 @@
 
   "block.magicmodbuns.mortar_and_pestle": "Mortar and Pestle",
   "block.magicmodbuns.potion_bottle": "Potion Bottle",
-  "block.magicmodbuns.potion_bottle": "Altar",
+  "block.magicmodbuns.altar_block": "Altar",
 
   "creativetab.magic_tab": "Bun's Magic Mod"
 }

@@ -6,6 +6,6 @@
     128
   ],
   "textures": {
-    "particle": "item/alter_texture"
+    "particle": "item/altar_texture"
   }
 }

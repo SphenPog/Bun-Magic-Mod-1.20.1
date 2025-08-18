@@ -17,7 +17,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.sphen.magicmodbuns.animations.block.MortarAndPestleRenderer;
+import net.sphen.magicmodbuns.animations.block.altar_block.AltarBlockRenderer;
+import net.sphen.magicmodbuns.animations.block.mortar_and_pestle.MortarAndPestleRenderer;
 import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
@@ -32,6 +33,8 @@ import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.Packets.SyncChalkPatternPacket;
 import org.slf4j.Logger;
+import software.bernie.example.item.GeckoArmorItem;
+import software.bernie.geckolib.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MagicMod.MODID)
@@ -59,6 +62,7 @@ public class MagicMod
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+        GeckoLib.initialize();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -105,6 +109,7 @@ public class MagicMod
             //custom block model initialization
             BlockEntityRenderers.register(ModBlockEntities.CHALK_PATTERN.get(), context -> new ChalkPatternBlockRenderer());
             BlockEntityRenderers.register(ModBlockEntities.MORTAR_PESTLE.get(), pContext -> new MortarAndPestleRenderer());
+            BlockEntityRenderers.register(ModBlockEntities.ALTAR.get(), pContext -> new AltarBlockRenderer());
         }
     }
 }
