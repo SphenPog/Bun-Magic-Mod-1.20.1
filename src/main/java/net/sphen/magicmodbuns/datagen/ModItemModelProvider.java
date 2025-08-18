@@ -31,6 +31,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleBlockItem(ModBlocks.CHALK_PATTERN);
 
         blockSpecialItem(ModBlocks.MORTAR_AND_PESTLE);
+        simpleBlockItem(ModBlocks.ALTAR_BLOCK);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item){

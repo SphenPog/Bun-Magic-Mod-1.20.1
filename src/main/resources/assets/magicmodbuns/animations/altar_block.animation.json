@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"alter_animation": {
+			"loop": true,
+			"bones": {
+				"bone8": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"vector": [1, 1, 1]
+					}
+				}
+			}
+		}
+	}
+}

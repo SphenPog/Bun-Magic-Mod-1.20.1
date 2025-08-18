@@ -34,6 +34,8 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
         this.dropSelf(ModBlocks.POTION_BOTTLE_BLOCK.get());
 
+        this.dropSelf(ModBlocks.ALTAR_BLOCK.get());
+
         this.dropSelf(ModBlocks.WILLOW_LOG.get());
         this.dropSelf(ModBlocks.WILLOW_WOOD.get());
         this.dropSelf(ModBlocks.STRIPPED_WILLOW_LOG.get());

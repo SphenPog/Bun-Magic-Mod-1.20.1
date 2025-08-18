@@ -34,6 +34,8 @@ public class ModBlocks {
             () -> new MortarAndPestleBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
     public static final RegistryObject<Block> POTION_BOTTLE_BLOCK = registerBlock("potion_bottle",
             () -> new PotionBottleBlock(BlockBehaviour.Properties.copy(Blocks.GLASS).noOcclusion()));
+    public static final RegistryObject<Block> ALTAR_BLOCK = registerBlock("altar_block",
+            () -> new AltarBlock(BlockBehaviour.Properties.copy(Blocks.STONE).sound(SoundType.STONE).noOcclusion()));
 
     public static final RegistryObject<Block> WILLOW_LOG = registerBlock("willow_log",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).strength(3f)));
