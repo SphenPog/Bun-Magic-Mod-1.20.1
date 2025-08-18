@@ -6,12 +6,12 @@ import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
 import java.util.Map;
 
 public class SpellInstance {
-    SpellDefinition definition;
-    Player caster;
-    RunePatternGraph graph;
+    public SpellDefinition definition;
+    public Player caster;
+    public RunePatternGraph graph;
     public Map<String, Object> properties;
 
-    void cast() {
+    public void cast() {
         definition.logic.cast(this, caster, graph);
     }
 }

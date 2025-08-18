@@ -21,8 +21,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
-import net.sphen.magicmodbuns.screen.elements.PatternObject;
-import net.sphen.magicmodbuns.spells.runes.*;
+import net.sphen.magicmodbuns.spells.SpellDefinition;
+import net.sphen.magicmodbuns.spells.SpellInstance;
+import net.sphen.magicmodbuns.spells.logic.SpellLoader;
+import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
+import net.sphen.magicmodbuns.spells.runes.RuneSearch;
+import net.sphen.magicmodbuns.spells.runes.RuneType;
+
+import java.util.HashMap;
+import java.util.Set;
 
 public class ChalkPatternBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -38,30 +45,44 @@ public class ChalkPatternBlock extends BaseEntityBlock {
 
         //gets new rotation direction
         if(!pLevel.isClientSide && !sneaking){
+
             Direction currentDirection = pState.getValue(FACING);
             Direction newDirection = currentDirection.getClockWise();
 
             pLevel.setBlockAndUpdate(pPos, pState.setValue(FACING, newDirection));
+
+            return InteractionResult.SUCCESS;
+
         } else if (!pLevel.isClientSide && sneaking) {
+
+            System.out.println("[ChalkPatternBlock.use]: Player shift clicked rune.");
+
             int radius = 8;
             boolean diagonals = true;
+
             RunePatternGraph graph = RuneSearch.findPattern(pLevel, pPos, radius, diagonals);
+            Set<RuneType> detectedRunes = graph.getRuneTypes();
 
-            System.out.println(graph);
-            System.out.println(graph.getNodes());
+            System.out.println("Detected rune types: " + detectedRunes);
 
-            //remove (debug)
-            if (pLevel.getBlockEntity(pPos) instanceof ChalkPatternBlockEntity be) {
-                PatternObject pattern = be.getPattern();
+            SpellDefinition spell = SpellLoader.findSpellFromRunes(detectedRunes);
 
-                System.out.println(pattern.getSortedLines());
-                RuneType type = RuneRegistry.detectRune(pattern);
-                System.out.println("RUNE TYPE : " + type.name());
-                System.out.println("RUNE SIGS : " + RuneRegistry.getAllSignatures());
+            if (spell != null) {
+                System.out.println("Detected spell: " + spell.id);
+
+                SpellInstance instance = new SpellInstance();
+                instance.definition = spell;
+                instance.caster = pPlayer;
+                instance.graph = graph;
+                instance.properties = new HashMap<>();
+
+                instance.cast();
+                } else {
+                System.out.println("No spell detected for this rune combination.");
             }
+
+            return InteractionResult.SUCCESS;
         }
-
-
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }

@@ -1,0 +1,8 @@
+{
+  "logic": "magicmodbuns:place_block",
+  "config": {
+    "runes": ["magicmodbuns:light"],
+    "block": "minecraft:glowstone",
+    "shape": "single"
+  }
+}

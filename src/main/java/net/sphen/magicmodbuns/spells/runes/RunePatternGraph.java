@@ -11,11 +11,22 @@ public class RunePatternGraph {
     private final Map<BlockPos, RuneNode> nodes = new HashMap<>();
     private final Set<BlockPos> blanks = new HashSet<>();
     private final Multimap<BlockPos, BlockPos> edges = HashMultimap.create();
+    private Set<RuneType> runeTypes = new HashSet<>();
+    private BlockPos origin;
     private int yLevel;
     private AABB bounds = new AABB(0,0,0,0,0,0);
 
+
     public void setyLevel(int yLevel) {
         this.yLevel = yLevel;
+    }
+
+    public void setOrigin(BlockPos origin) {
+        this.origin = origin;
+    }
+
+    public void setRuneTypes(Set<RuneType> runeTypes){
+        this.runeTypes = runeTypes;
     }
 
     public int getyLevel() {
@@ -69,4 +80,11 @@ public class RunePatternGraph {
         }
     }
 
+    public BlockPos getOrigin() {
+        return origin;
+    }
+
+    public Set<RuneType> getRuneTypes() {
+        return runeTypes;
+    }
 }

@@ -29,7 +29,11 @@ import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
+import net.sphen.magicmodbuns.spells.logic.SpellLoader;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
+import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;
+import net.sphen.magicmodbuns.spells.runes.RuneType;
 import net.sphen.magicmodbuns.util.Packets.CloseBookPacket;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
@@ -43,7 +47,7 @@ public class MagicMod
     // Define mod id in a common place for everything to reference
     public static final String MODID = "magicmodbuns";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     // Register the networking channel
     public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(MODID, "network_channel"),
@@ -76,6 +80,7 @@ public class MagicMod
 
         MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> {
             event.addListener(new RuneReloadListener());
+            event.addListener(new SpellLoader());
         });
 
     }
@@ -86,6 +91,10 @@ public class MagicMod
         NETWORK.registerMessage(1, SyncChalkPatternPacket.class, SyncChalkPatternPacket::encode, SyncChalkPatternPacket::decode, SyncChalkPatternPacket::handle);
         NETWORK.registerMessage(2, RemoveChalkTexturePacket.class, RemoveChalkTexturePacket::encode, RemoveChalkTexturePacket::decode, RemoveChalkTexturePacket::handle);
         NETWORK.registerMessage(3, CloseBookPacket.class, CloseBookPacket::encode, CloseBookPacket::decode, CloseBookPacket::handle);
+
+        RuneRegistry.registerRuneId("magicmodbuns:light", RuneType.LIGHT);
+
+        SpellLogicRegistry.init();
     }
 
     // Add the example block item to the building blocks tab

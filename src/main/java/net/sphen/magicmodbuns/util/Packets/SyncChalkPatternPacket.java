@@ -1,17 +1,12 @@
 package net.sphen.magicmodbuns.util.Packets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.NetworkEvent;
-import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.custom.ChalkPatternBlock;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
@@ -19,8 +14,6 @@ import net.sphen.magicmodbuns.util.PatternTextureGenerator;
 import net.sphen.magicmodbuns.util.PatternTextureLoader;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.nio.file.Files;
 import java.util.function.Supplier;
 
 public class SyncChalkPatternPacket {

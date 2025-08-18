@@ -41,7 +41,10 @@ public class PlaceChalkPatternPacket {
             BlockPlacementHelper.placeChalkPatternBlock(level, pos, pattern.loadData(message.getPatternData()), message.getTexturePath());
 
             // Send the Sync packet to the client, making sure the chunk is tracked
-            SyncChalkPatternPacket syncPacket = new SyncChalkPatternPacket(pos, message.getPatternData(), message.getTexturePath());
+            SyncChalkPatternPacket syncPacket = new SyncChalkPatternPacket(
+                    pos,
+                    message.getPatternData(),
+                    message.getTexturePath());
             MagicMod.NETWORK.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), syncPacket);
 
             System.out.println("✅ Sent SyncChalkPatternPacket to clients at chunk: " + pos);

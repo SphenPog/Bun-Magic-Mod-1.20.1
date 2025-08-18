@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class PatternObject {
 
     private final List<Line> lines = new ArrayList<>();
+    private boolean withered = false;
 
     public void addLine(Dot start, Dot end, boolean curved) {
         Dot first = (start.compareTo(end) <= 0) ? start : end;

@@ -24,7 +24,7 @@ public class RuneReloadListener extends SimpleJsonResourceReloadListener {
      pJson.forEach((id, element) -> {
          try {
              RuneDefinition definition = RuneDefinition.fromJson(id, element.getAsJsonObject());
-             RuneRegistry.register(definition);
+             RuneRegistry.registerSingleRune(definition);
              System.out.println("Loaded rune: " + definition.name + " -> " +definition.signatures);
          } catch (Exception e) {
              System.err.println("Failed to load rune " + id + ": " + e.getMessage());
