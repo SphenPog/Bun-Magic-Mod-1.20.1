@@ -18,6 +18,6 @@ public class AltarBlockModel extends GeoModel<AltarBlockEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(AltarBlockEntity animatable) {
-        return new ResourceLocation(MagicMod.MODID, "animation/altar_block.animation.json");
+        return new ResourceLocation(MagicMod.MODID, "animations/altar_block.animation.json");
     }
 }

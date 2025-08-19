@@ -33,8 +33,6 @@ import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.Packets.SyncChalkPatternPacket;
 import org.slf4j.Logger;
-import software.bernie.example.item.GeckoArmorItem;
-import software.bernie.geckolib.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MagicMod.MODID)
@@ -62,7 +60,6 @@ public class MagicMod
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-        GeckoLib.initialize();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

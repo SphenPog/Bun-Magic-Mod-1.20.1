@@ -6,6 +6,6 @@
     128
   ],
   "textures": {
-    "particle": "item/altar_texture"
+    "particle": "magicmodbuns:particle/altar_texture"
   }
 }
