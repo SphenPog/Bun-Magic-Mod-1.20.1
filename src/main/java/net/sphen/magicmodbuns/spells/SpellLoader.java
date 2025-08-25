@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.spells.logic;
+package net.sphen.magicmodbuns.spells;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,7 +9,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.spells.SpellDefinition;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneType;
 

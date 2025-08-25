@@ -8,11 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.block.ChalkType;
+import net.sphen.magicmodbuns.item.custom.chalks.ChalkItem;
 import net.sphen.magicmodbuns.screen.elements.Dot;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.util.ModTags;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 
 import java.util.ArrayList;
@@ -382,9 +386,21 @@ public class ChalkScreen extends AbstractContainerScreen<ChalkMenu> {
             String textureFileName = "pattern_" + placePos.getX() + "_" + placePos.getY() + "_" + placePos.getZ();
             String patternData = patternObject.storeData();
 
+            //get the type of chalk used
+            ChalkType chalkType;
+            ItemStack chalkItem = player.getItemInHand(player.swingingArm);
+            if (chalkItem.is(ModTags.Items.CHALK_TYPE_TAG)) {
+                chalkType = ((ChalkItem) chalkItem.getItem()).getChalkType();
+                System.out.println(chalkType);
+                System.out.println("testing chalk type");
+            } else {
+                chalkType = ChalkType.UNKNOWN;
+                System.out.println("Chalk Type is unknown at -> ChalkScreen -> onClose();");
+            }
+
             // Place the block with the stored pattern
             if (player.level().getBlockState(placePos).isAir()) {
-                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, textureFileName));
+                MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(placePos, patternData, textureFileName, chalkType));
             }
         }
     }

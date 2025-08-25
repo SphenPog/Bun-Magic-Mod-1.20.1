@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
 import net.sphen.magicmodbuns.util.Packets.RemoveChalkTexturePacket;
 import net.sphen.magicmodbuns.util.PatternTextureGenerator;
@@ -21,13 +22,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.lang.annotation.ElementType;
 
 public class ChalkPatternBlockEntity extends BlockEntity {
     private PatternObject pattern;
     private ResourceLocation texturePath;
     private BlockPos pos;
-    private ElementType element;
+    private ChalkType chalkType;
 
     //constructor
     public ChalkPatternBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -118,6 +118,13 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         } else {
             System.out.println("texture = null");
         }
+
+        // Save Chalk Type (element)
+        if (chalkType != null){
+            pTag.putString("chalkType", chalkType.toString());
+        } else {
+            System.out.println("chalkType = null");
+        }
     }
 
     //overrides load function to load pattern data and dynamically reload the generated pattern textures.
@@ -157,7 +164,9 @@ public class ChalkPatternBlockEntity extends BlockEntity {
                 System.err.println("❌ Failed to reload texture for: " + filename);
                 System.err.println("Trying to recreate texture now!_________");
 
-                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern);
+                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern, chalkType);
+                System.out.println("CHALK TYPE HERE: " + chalkType + " FROM CHALKPATTERNVLOCKENTITYs");
+
                 String textureFileName = "pattern_" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ();
 
                 PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
@@ -219,12 +228,15 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         }
     }
 
-    public ElementType getElementType() {
-        return element;
-    }
-
     public PatternObject getPattern() {
         return pattern;
     }
 
+    public ChalkType getChalkType() {
+        return chalkType;
+    }
+
+    public void setChalkType(ChalkType chalkType) {
+        this.chalkType = chalkType;
+    }
 }

@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.spells.SpellDefinition;
 import net.sphen.magicmodbuns.spells.SpellInstance;
-import net.sphen.magicmodbuns.spells.logic.SpellLoader;
+import net.sphen.magicmodbuns.spells.SpellLoader;
 import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
 import net.sphen.magicmodbuns.spells.runes.RuneSearch;
 import net.sphen.magicmodbuns.spells.runes.RuneType;

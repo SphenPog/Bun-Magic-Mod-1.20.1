@@ -20,6 +20,8 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         simpleItem(ModItems.CHALK);
+        simpleItem(ModItems.CHALK_FIRE);
+        simpleItem(ModItems.CHALK_AIR);
         simpleItem(ModItems.LIMESTONE_CHUNK);
         simpleItem(ModItems.METAL_DETECTOR);
 

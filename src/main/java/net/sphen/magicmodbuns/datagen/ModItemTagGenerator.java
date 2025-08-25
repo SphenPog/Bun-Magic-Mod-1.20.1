@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
+import net.sphen.magicmodbuns.item.ModItems;
 import net.sphen.magicmodbuns.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +23,11 @@ public class ModItemTagGenerator extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        this.tag(ModTags.Items.CHALK_TYPE_TAG)
+                .add(ModItems.CHALK.get().asItem())
+                .add(ModItems.CHALK_FIRE.get().asItem())
+                .add(ModItems.CHALK_AIR.get().asItem());
+
         this.tag(ModTags.Items.SPELL_BOOK_PAPER_TAG)
                 .add(Items.PAPER);
 

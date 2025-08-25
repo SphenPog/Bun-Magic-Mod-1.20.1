@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.item.custom;
+package net.sphen.magicmodbuns.item.custom.chalks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,6 +10,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.NetworkHooks;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.screen.chalk.ChalkScreenProvider;
 
 public class ChalkItem extends Item {
@@ -18,6 +19,10 @@ public class ChalkItem extends Item {
     int maxDamage = 0;
     public ChalkItem(Properties pProperties) {
         super(pProperties);
+    }
+
+    public ChalkType getChalkType(){
+        return ChalkType.UNKNOWN;
     }
 
     @Override

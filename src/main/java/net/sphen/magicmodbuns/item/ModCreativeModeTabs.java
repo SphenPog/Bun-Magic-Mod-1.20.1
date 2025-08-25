@@ -19,6 +19,8 @@ public class ModCreativeModeTabs {
                     .title(Component.translatable("creativetab.magic_tab"))
                     .displayItems(((pParameters, pOutput) -> {
                         pOutput.accept(ModItems.CHALK.get());
+                        pOutput.accept(ModItems.CHALK_FIRE.get());
+                        pOutput.accept(ModItems.CHALK_AIR.get());
                         pOutput.accept(ModItems.LIMESTONE_CHUNK.get());
                         pOutput.accept(ModItems.METAL_DETECTOR.get());
 

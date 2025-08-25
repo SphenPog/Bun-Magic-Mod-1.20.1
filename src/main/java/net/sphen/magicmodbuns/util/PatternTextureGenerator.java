@@ -2,6 +2,7 @@ package net.sphen.magicmodbuns.util;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.screen.elements.Line;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
 
@@ -17,7 +18,7 @@ public class PatternTextureGenerator {
     private static final int SIZE = 64; // Texture size
     private static final int DOT_SPACING = SIZE / 6; // Spacing for 5x5 grid
 
-    public static BufferedImage generateBufferedImage(PatternObject pattern) {
+    public static BufferedImage generateBufferedImage(PatternObject pattern, ChalkType chalkType) {
         BufferedImage image = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
@@ -29,7 +30,7 @@ public class PatternTextureGenerator {
         g.fillRect(0, 0, SIZE, SIZE);
 
         // Draw lines in white (chalk effect)
-        g.setColor(Color.WHITE);
+        g.setColor(chalkType.getValue());
         g.setStroke(new BasicStroke(3)); // Line thickness
 
         for (Line line : pattern.getLines()) {

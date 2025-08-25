@@ -111,7 +111,7 @@ public class RuneSearch {
 
         return new RuneNode(
                 pos.immutable(),
-                blockEntity.getElementType(),
+                blockEntity.getChalkType(),
                 blockEntity,
                 RuneRegistry.detectSingleRune(blockEntity.getPattern().getSortedLines())
         );

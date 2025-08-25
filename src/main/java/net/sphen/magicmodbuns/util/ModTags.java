@@ -23,7 +23,7 @@ public class ModTags {
     public static class Items {
 
         public static final TagKey<Item> SPELL_BOOK_PAPER_TAG = tag("spell_book_paper_tag");
-
+        public static final TagKey<Item> CHALK_TYPE_TAG = tag("chalk_type_tag");
         //item tags here ^
 
         private static TagKey<Item> tag(String name){

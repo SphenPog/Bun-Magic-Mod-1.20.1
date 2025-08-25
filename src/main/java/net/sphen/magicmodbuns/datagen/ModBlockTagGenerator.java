@@ -10,6 +10,7 @@ import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.util.ModTags;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagGenerator extends BlockTagsProvider {

@@ -29,7 +29,7 @@ import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
-import net.sphen.magicmodbuns.spells.logic.SpellLoader;
+import net.sphen.magicmodbuns.spells.SpellLoader;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;

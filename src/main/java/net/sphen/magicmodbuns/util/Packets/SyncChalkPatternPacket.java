@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.custom.ChalkPatternBlock;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
@@ -20,25 +21,31 @@ public class SyncChalkPatternPacket {
     private final BlockPos pos;
     private final String patternData;
     private final String texturePath;
+    private final ChalkType chalkType;
 
-    public SyncChalkPatternPacket(BlockPos pos, String patternData, String texturePath) {
+    public SyncChalkPatternPacket(BlockPos pos, String patternData, String texturePath, ChalkType chalkType) {
         this.pos = pos;
         this.patternData = patternData;
         System.out.println(patternData + " - pattern Data string");
         this.texturePath = texturePath;
+        this.chalkType = chalkType;
     }
 
     public static void encode(SyncChalkPatternPacket packet, FriendlyByteBuf buf) {
         buf.writeBlockPos(packet.getPos());  // Serialize BlockPos
         buf.writeUtf(packet.getPattern().storeData());  // Serialize pattern data
         buf.writeUtf(packet.getTexturePath());  // Serialize texture path
+        buf.writeUtf(String.valueOf(packet.getChalkType().getId()));
     }
 
-    public static SyncChalkPatternPacket decode(FriendlyByteBuf buf) {
-        BlockPos pos = buf.readBlockPos();  // Deserialize BlockPos
-        String patternData = buf.readUtf();  // Deserialize pattern data
-        String texturePath = buf.readUtf();  // Deserialize texture path
-        return new SyncChalkPatternPacket(pos, patternData, texturePath);
+    public static SyncChalkPatternPacket decode(FriendlyByteBuf buffer) {
+        BlockPos pos = buffer.readBlockPos();  // Deserialize BlockPos
+        String patternData = buffer.readUtf();  // Deserialize pattern data
+        String texturePath = buffer.readUtf();  // Deserialize texture path
+        String chalkColor = buffer.readUtf(); // Deserialize chalk type
+        ChalkType chalkType = ChalkType.getById(Integer.valueOf(chalkColor));
+
+        return new SyncChalkPatternPacket(pos, patternData, texturePath, chalkType);
     }
 
     public static void handle(SyncChalkPatternPacket message, Supplier<NetworkEvent.Context> ctx) {
@@ -70,13 +77,15 @@ public class SyncChalkPatternPacket {
 
 
         if (block instanceof ChalkPatternBlock) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof ChalkPatternBlockEntity chalkEntity) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof ChalkPatternBlockEntity chalkEntity) {
                 System.out.println("✅ Found block + entity! Applying pattern and texture");
+
+                ChalkType chalkType = message.chalkType;
 
                 // Generate texture from pattern
                 System.out.println(pattern.getLines().size() + " - amount of lines. line data: " + pattern.getLines());
-                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern);
+                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern, chalkType);
                 String textureFileName = "pattern_" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ();
 
                 PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
@@ -106,6 +115,10 @@ public class SyncChalkPatternPacket {
 
     private String getTexturePath() {
         return texturePath;
+    }
+
+    private ChalkType getChalkType(){
+        return chalkType;
     }
 
     public PatternObject getPattern() {
