@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.sphen.magicmodbuns.block.ChalkType;
@@ -41,6 +42,8 @@ import java.util.Set;
 
 public class ChalkPatternBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private PatternObject patternObject;
+    private ChalkType chalkType;
 
     public ChalkPatternBlock(Properties pProperties) {
         super(pProperties);
@@ -55,22 +58,11 @@ public class ChalkPatternBlock extends BaseEntityBlock {
         //checks if player is picking up rune
         //if not, gets new rotation direction
         if (!pLevel.isClientSide && heldItem.is(Items.PAPER)) {
-            PatternObject patternObject = new PatternObject();
-            ChalkType chalkType = ChalkType.UNKNOWN;
-
-            if (pLevel.getBlockEntity(pPos) instanceof ChalkPatternBlockEntity) {
-                patternObject = ((ChalkPatternBlockEntity) Objects.requireNonNull(pLevel.getBlockEntity(pPos))).getPattern();
-                chalkType = ((ChalkPatternBlockEntity) Objects.requireNonNull(pLevel.getBlockEntity(pPos))).getChalkType();
-            }
 
             heldItem.shrink(1);
+            ItemStack newItem = getPaperWithNbt(pLevel, pPos);
+
             pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 3);
-
-            ItemStack newItem = new ItemStack(ModItems.SPELL_PAPER.get());
-            CompoundTag paperData = newItem.getOrCreateTag();
-            paperData.putString("pattern", patternObject.storeData());
-            paperData.putInt("chalk_type", chalkType.getId());
-
             pPlayer.getInventory().add(newItem);
 
             return InteractionResult.SUCCESS;
@@ -118,7 +110,10 @@ public class ChalkPatternBlock extends BaseEntityBlock {
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        return getPaperWithNbt((Level) level, pos);
+    }
 
     //override onRemove function to delete the associated texture when pattern is broken.
     @Override
@@ -162,5 +157,22 @@ public class ChalkPatternBlock extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new ChalkPatternBlockEntity(pPos, pState);
+    }
+
+    private ItemStack getPaperWithNbt(Level level, BlockPos pos){
+        patternObject = new PatternObject();
+        chalkType = ChalkType.UNKNOWN;
+
+        if (level.getBlockEntity(pos) instanceof ChalkPatternBlockEntity) {
+            patternObject = ((ChalkPatternBlockEntity) Objects.requireNonNull(level.getBlockEntity(pos))).getPattern();
+            chalkType = ((ChalkPatternBlockEntity) Objects.requireNonNull(level.getBlockEntity(pos))).getChalkType();
+        }
+
+        ItemStack newItem = new ItemStack(ModItems.SPELL_PAPER.get());
+        CompoundTag paperData = newItem.getOrCreateTag();
+        paperData.putString("pattern", patternObject.storeData());
+        paperData.putInt("chalk_type", chalkType.getId());
+
+        return newItem;
     }
 }
