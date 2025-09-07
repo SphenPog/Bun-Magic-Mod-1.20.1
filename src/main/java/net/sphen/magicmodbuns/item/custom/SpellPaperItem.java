@@ -2,13 +2,16 @@ package net.sphen.magicmodbuns.item.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
+import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 
 public class SpellPaperItem extends Item {
@@ -17,6 +20,16 @@ public class SpellPaperItem extends Item {
 
     public SpellPaperItem(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public Component getName(ItemStack pStack) {
+        CompoundTag tag = pStack.getTag();
+        if (tag != null) {
+            String runeName = RuneRegistry.detectSingleRune(tag.getString("pattern")) + " Rune";
+            return Component.translatable(runeName);
+        }
+        return super.getName(pStack);
     }
 
     @Override

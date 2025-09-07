@@ -91,10 +91,15 @@ public class MagicMod
         NETWORK.registerMessage(1, SyncChalkPatternPacket.class, SyncChalkPatternPacket::encode, SyncChalkPatternPacket::decode, SyncChalkPatternPacket::handle);
         NETWORK.registerMessage(2, RemoveChalkTexturePacket.class, RemoveChalkTexturePacket::encode, RemoveChalkTexturePacket::decode, RemoveChalkTexturePacket::handle);
         NETWORK.registerMessage(3, CloseBookPacket.class, CloseBookPacket::encode, CloseBookPacket::decode, CloseBookPacket::handle);
+        NETWORK.registerMessage(4, CycleSpellPacket.class, CycleSpellPacket::encode, CycleSpellPacket::decode, CycleSpellPacket::handle);
 
         RuneRegistry.registerRuneId("magicmodbuns:light", RuneType.LIGHT);
 
         SpellLogicRegistry.init();
+    }
+
+    public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
+        NETWORK.send(PacketDistributor.PLAYER.with(() -> player), message);
     }
 
     // Add the example block item to the building blocks tab

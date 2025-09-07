@@ -170,7 +170,7 @@ public class ChalkPatternBlock extends BaseEntityBlock {
 
         ItemStack newItem = new ItemStack(ModItems.SPELL_PAPER.get());
         CompoundTag paperData = newItem.getOrCreateTag();
-        paperData.putString("pattern", patternObject.storeData());
+        paperData.putString("pattern", patternObject.getSortedLines());
         paperData.putInt("chalk_type", chalkType.getId());
 
         return newItem;

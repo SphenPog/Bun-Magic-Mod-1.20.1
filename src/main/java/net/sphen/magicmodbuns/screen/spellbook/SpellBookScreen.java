@@ -30,6 +30,14 @@ public class SpellBookScreen extends AbstractContainerScreen<SpellBookMenu> {
     }
 
     @Override
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphics);
+        this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
 
