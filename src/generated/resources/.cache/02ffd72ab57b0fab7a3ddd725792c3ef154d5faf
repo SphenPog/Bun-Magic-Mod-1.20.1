@@ -1,4 +1,4 @@
-// 1.20.1	2025-09-06T18:50:37.1470155	Item Models: magicmodbuns
+// 1.20.1	2025-09-07T16:40:53.3539683	Item Models: magicmodbuns
 a142810fae69dc4489473bbbf992f3482fb770e4 assets/magicmodbuns/models/item/chalk.json
 5e8f3dbc38df079554570ad59a28f8a03a852e3c assets/magicmodbuns/models/item/chalk_air.json
 448bd8d285dc4a5badfd23d32221b3699da8f1af assets/magicmodbuns/models/item/chalk_fire.json
@@ -10,4 +10,11 @@ a0664a7c08e8642be9e5ab81c9c97f2839bb14d3 assets/magicmodbuns/models/item/polishe
 8d6593b4f93e9831eca0ed96f2247400c20a9f50 assets/magicmodbuns/models/item/potion_bottle.json
 df8bf7cea277c60a834f368d54469b90140956cd assets/magicmodbuns/models/item/raw_limestone.json
 71721dd6e00aed1dca89c68b8fc7fc1a32d7a1cb assets/magicmodbuns/models/item/spell_book.json
-7716c364f107b9e1157e732b57915b453c0d419d assets/magicmodbuns/models/item/spell_paper.json
+95df18fc658402edde674870d7d42e818a261ae1 assets/magicmodbuns/models/item/spell_paper.json
+f0ff00ad60b11dd7cd8b3c85fe4e790b6c6592ac assets/magicmodbuns/models/item/variants/spell_paper_black.json
+42e3fe9f13ccf98eebe112ed6871193040f1ed89 assets/magicmodbuns/models/item/variants/spell_paper_blue.json
+8d2509253ab9f5b923218741127d4c977e78826f assets/magicmodbuns/models/item/variants/spell_paper_gray.json
+4e9e7518bccc138e1ba5f1865abc72fbc08c5963 assets/magicmodbuns/models/item/variants/spell_paper_green.json
+ec625b6694abcaf681afcf520f1a94b64ce53b33 assets/magicmodbuns/models/item/variants/spell_paper_red.json
+1254a8dc36778588fcdc99ac1a00fd9b4c349caa assets/magicmodbuns/models/item/variants/spell_paper_white.json
+d1ca13708c94091322e9ca91b18b6c934393379d assets/magicmodbuns/models/item/variants/spell_paper_yellow.json

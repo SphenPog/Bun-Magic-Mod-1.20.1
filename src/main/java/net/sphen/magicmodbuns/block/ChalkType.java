@@ -41,5 +41,23 @@ public enum ChalkType {
         return null;
     }
 
-
+    public static String getColorById(int id){
+        switch (id){
+            case 1:
+                return "yellow";
+            case 2:
+                return "blue";
+            case 3:
+                return "green";
+            case 4:
+                return "red";
+            case 5:
+                return "gray";
+            case 6:
+                return "black";
+            case 7:
+                return "white";
+        }
+        return null;
+    }
 }

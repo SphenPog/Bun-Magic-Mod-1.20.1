@@ -6,9 +6,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.item.ModItems;
 
@@ -26,7 +28,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.METAL_DETECTOR);
 
         simpleItem(ModItems.SPELL_BOOK);
-        simpleItem(ModItems.SPELL_PAPER);
+        spellPaperBuilder(ModItems.SPELL_PAPER);
 
         simpleBlockItem(ModBlocks.POLISHED_LIMESTONE);
         simpleBlockItem(ModBlocks.RAW_LIMESTONE);
@@ -51,5 +53,27 @@ public class ModItemModelProvider extends ItemModelProvider {
         return withExistingParent(block.getId().getPath(),
                 new ResourceLocation("item/generated")).texture("layer0",
                 new ResourceLocation(MagicMod.MODID, "item/" + block.getId().getPath()));
+    }
+
+    private void spellPaperBuilder(RegistryObject<Item> item) {
+        ItemModelBuilder spellPaperBuilder = withExistingParent(item.getId().getPath(),
+                new ResourceLocation("item/generated"))
+                .texture("layer0", new ResourceLocation(MagicMod.MODID, "item/spell_paper_base"));
+
+        for (ChalkType chalk : ChalkType.values()) {
+
+            String variantName = "spell_paper_" + ChalkType.getColorById(chalk.getId());
+            ResourceLocation variantModelLocation = new ResourceLocation(MagicMod.MODID, "item/variants/" + variantName);
+
+            withExistingParent("item/variants/" + variantName, new ResourceLocation("item/generated"))
+                    .texture("layer0", new ResourceLocation(MagicMod.MODID, "item/variants/" + variantName));
+
+            float predicateValue = (float)chalk.getId();
+
+            spellPaperBuilder.override()
+                    .predicate(new ResourceLocation(MagicMod.MODID, "spell_variant"), predicateValue)
+                    .model(new ModelFile.UncheckedModelFile(variantModelLocation))
+                    .end();
+        }
     }
 }

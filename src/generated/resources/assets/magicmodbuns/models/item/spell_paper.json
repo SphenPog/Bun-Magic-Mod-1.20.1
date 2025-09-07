@@ -1,6 +1,50 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_yellow",
+      "predicate": {
+        "magicmodbuns:spell_variant": 1.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_blue",
+      "predicate": {
+        "magicmodbuns:spell_variant": 2.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_green",
+      "predicate": {
+        "magicmodbuns:spell_variant": 3.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_red",
+      "predicate": {
+        "magicmodbuns:spell_variant": 4.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_gray",
+      "predicate": {
+        "magicmodbuns:spell_variant": 5.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_black",
+      "predicate": {
+        "magicmodbuns:spell_variant": 6.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/variants/spell_paper_white",
+      "predicate": {
+        "magicmodbuns:spell_variant": 7.0
+      }
+    }
+  ],
   "textures": {
-    "layer0": "magicmodbuns:item/spell_paper"
+    "layer0": "magicmodbuns:item/spell_paper_base"
   }
 }
