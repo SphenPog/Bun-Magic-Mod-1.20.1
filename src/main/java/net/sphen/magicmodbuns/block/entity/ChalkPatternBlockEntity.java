@@ -35,6 +35,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
         this.pattern = new PatternObject();
         this.pos = pPos;
         this.texturePath = null;
+        this.chalkType = ChalkType.UNKNOWN;
         getTexturePath();
         System.out.println("ChalkPatternBlockEntity CREATED at " + pPos);
     }
@@ -50,7 +51,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     }
 
     public void setTexturePath(String texturePath) {
-        this.texturePath = new ResourceLocation(MagicMod.MODID, texturePath);
+        this.texturePath = new ResourceLocation(MagicMod.MODID, "generated_textures/" + texturePath);
     }
 
     public ResourceLocation getTexturePath() {
@@ -121,7 +122,7 @@ public class ChalkPatternBlockEntity extends BlockEntity {
 
         // Save Chalk Type (element)
         if (chalkType != null){
-            pTag.putString("chalkType", chalkType.toString());
+            pTag.putInt("chalkType", chalkType.getId());
         } else {
             System.out.println("chalkType = null");
         }
@@ -147,6 +148,13 @@ public class ChalkPatternBlockEntity extends BlockEntity {
             } else {
                 System.out.println("⚠ Warning: Pattern data is empty when loading!");
             }
+        }
+
+        if (pTag.contains("chalkType")) {
+            int data = pTag.getInt("chalkType");
+
+            chalkType = ChalkType.getById(data);
+            System.out.println("Loaded chalkType data: " + ChalkType.getById(data));
         }
 
         // Load texture path

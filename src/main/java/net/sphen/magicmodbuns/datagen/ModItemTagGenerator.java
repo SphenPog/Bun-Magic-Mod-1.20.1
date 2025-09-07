@@ -29,7 +29,8 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.CHALK_AIR.get().asItem());
 
         this.tag(ModTags.Items.SPELL_BOOK_PAPER_TAG)
-                .add(Items.PAPER);
+                .add(Items.PAPER)
+                .add(ModItems.SPELL_PAPER.get());
 
         this.tag(ItemTags.LOGS_THAT_BURN)
                 .add(ModBlocks.WILLOW_LOG.get().asItem())

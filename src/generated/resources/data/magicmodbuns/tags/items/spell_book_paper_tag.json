@@ -1,5 +1,6 @@
 {
   "values": [
-    "minecraft:paper"
+    "minecraft:paper",
+    "magicmodbuns:spell_paper"
   ]
 }

@@ -2,15 +2,19 @@ package net.sphen.magicmodbuns.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +24,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
+import net.sphen.magicmodbuns.item.ModItems;
+import net.sphen.magicmodbuns.screen.elements.PatternObject;
 import net.sphen.magicmodbuns.spells.SpellDefinition;
 import net.sphen.magicmodbuns.spells.SpellInstance;
 import net.sphen.magicmodbuns.spells.SpellLoader;
@@ -29,6 +36,7 @@ import net.sphen.magicmodbuns.spells.runes.RuneSearch;
 import net.sphen.magicmodbuns.spells.runes.RuneType;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Set;
 
 public class ChalkPatternBlock extends BaseEntityBlock {
@@ -42,9 +50,32 @@ public class ChalkPatternBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         boolean sneaking = pPlayer.isShiftKeyDown();
+        ItemStack heldItem = pPlayer.getItemInHand(pHand);
 
-        //gets new rotation direction
-        if(!pLevel.isClientSide && !sneaking){
+        //checks if player is picking up rune
+        //if not, gets new rotation direction
+        if (!pLevel.isClientSide && heldItem.is(Items.PAPER)) {
+            PatternObject patternObject = new PatternObject();
+            ChalkType chalkType = ChalkType.UNKNOWN;
+
+            if (pLevel.getBlockEntity(pPos) instanceof ChalkPatternBlockEntity) {
+                patternObject = ((ChalkPatternBlockEntity) Objects.requireNonNull(pLevel.getBlockEntity(pPos))).getPattern();
+                chalkType = ((ChalkPatternBlockEntity) Objects.requireNonNull(pLevel.getBlockEntity(pPos))).getChalkType();
+            }
+
+            heldItem.shrink(1);
+            pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 3);
+
+            ItemStack newItem = new ItemStack(ModItems.SPELL_PAPER.get());
+            CompoundTag paperData = newItem.getOrCreateTag();
+            paperData.putString("pattern", patternObject.storeData());
+            paperData.putInt("chalk_type", chalkType.getId());
+
+            pPlayer.getInventory().add(newItem);
+
+            return InteractionResult.SUCCESS;
+
+        } else if(!pLevel.isClientSide && !sneaking){
 
             Direction currentDirection = pState.getValue(FACING);
             Direction newDirection = currentDirection.getClockWise();
@@ -53,7 +84,7 @@ public class ChalkPatternBlock extends BaseEntityBlock {
 
             return InteractionResult.SUCCESS;
 
-        } else if (!pLevel.isClientSide && sneaking) {
+        } else if (!pLevel.isClientSide) {
 
             System.out.println("[ChalkPatternBlock.use]: Player shift clicked rune.");
 
@@ -86,6 +117,8 @@ public class ChalkPatternBlock extends BaseEntityBlock {
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
+
+
 
     //override onRemove function to delete the associated texture when pattern is broken.
     @Override

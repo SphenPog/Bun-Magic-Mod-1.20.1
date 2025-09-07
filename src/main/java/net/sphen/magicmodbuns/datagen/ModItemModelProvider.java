@@ -26,6 +26,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.METAL_DETECTOR);
 
         simpleItem(ModItems.SPELL_BOOK);
+        simpleItem(ModItems.SPELL_PAPER);
 
         simpleBlockItem(ModBlocks.POLISHED_LIMESTONE);
         simpleBlockItem(ModBlocks.RAW_LIMESTONE);
