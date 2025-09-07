@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ChalkType;
+import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
 import net.sphen.magicmodbuns.util.Packets.PlaceChalkPatternPacket;
 
@@ -20,6 +21,9 @@ public class SpellPaperItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
+        if (pContext.getLevel().getBlockEntity(pContext.getClickedPos()) instanceof ChalkPatternBlockEntity){
+            return InteractionResult.FAIL;
+        }
         if (pContext.getItemInHand().hasTag()){
             CompoundTag paperData = pContext.getItemInHand().getTag();
 
@@ -37,8 +41,9 @@ public class SpellPaperItem extends Item {
 
             MagicMod.NETWORK.sendToServer(new PlaceChalkPatternPacket(blockPos.above(), this.pattern.storeData(), textureFileName, this.chalkType));
             return InteractionResult.SUCCESS;
+        } else {
+            return InteractionResult.FAIL;
         }
-        return InteractionResult.FAIL;
     }
 
     public PatternObject getPattern() {
