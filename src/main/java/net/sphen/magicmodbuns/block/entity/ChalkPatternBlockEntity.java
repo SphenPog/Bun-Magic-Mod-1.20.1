@@ -247,4 +247,12 @@ public class ChalkPatternBlockEntity extends BlockEntity {
     public void setChalkType(ChalkType chalkType) {
         this.chalkType = chalkType;
     }
+
+    public void updatePatternFromPacket(PatternObject patternObject, ChalkType chalkType) {
+        this.pattern = patternObject;
+        this.chalkType = chalkType;
+
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+    }
 }

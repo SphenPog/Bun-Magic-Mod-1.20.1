@@ -4,128 +4,82 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 import net.sphen.magicmodbuns.block.ChalkType;
-import net.sphen.magicmodbuns.block.custom.ChalkPatternBlock;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.screen.elements.PatternObject;
-import net.sphen.magicmodbuns.util.PatternTextureGenerator;
-import net.sphen.magicmodbuns.util.PatternTextureLoader;
 
-import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 public class SyncChalkPatternPacket {
     private final BlockPos pos;
     private final String patternData;
-    private final String texturePath;
     private final ChalkType chalkType;
 
-    public SyncChalkPatternPacket(BlockPos pos, String patternData, String texturePath, ChalkType chalkType) {
+    public SyncChalkPatternPacket(BlockPos pos, String patternData, ChalkType chalkType) {
         this.pos = pos;
         this.patternData = patternData;
-        System.out.println(patternData + " - pattern Data string");
-        this.texturePath = texturePath;
         this.chalkType = chalkType;
     }
 
     public static void encode(SyncChalkPatternPacket packet, FriendlyByteBuf buf) {
-        buf.writeBlockPos(packet.getPos());  // Serialize BlockPos
-        buf.writeUtf(packet.getPattern().storeData());  // Serialize pattern data
-        buf.writeUtf(packet.getTexturePath());  // Serialize texture path
-        buf.writeUtf(String.valueOf(packet.getChalkType().getId()));
+        buf.writeBlockPos(packet.pos);  // Serialize BlockPos
+        buf.writeUtf(packet.patternData);  // Serialize pattern data
+        buf.writeEnum(packet.chalkType);
     }
 
     public static SyncChalkPatternPacket decode(FriendlyByteBuf buffer) {
-        BlockPos pos = buffer.readBlockPos();  // Deserialize BlockPos
-        String patternData = buffer.readUtf();  // Deserialize pattern data
-        String texturePath = buffer.readUtf();  // Deserialize texture path
-        String chalkColor = buffer.readUtf(); // Deserialize chalk type
-        ChalkType chalkType = ChalkType.getById(Integer.valueOf(chalkColor));
-
-        return new SyncChalkPatternPacket(pos, patternData, texturePath, chalkType);
+        return new SyncChalkPatternPacket(
+                buffer.readBlockPos(),
+                buffer.readUtf(),
+                buffer.readEnum(ChalkType.class)
+        );
     }
 
     public static void handle(SyncChalkPatternPacket message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            Minecraft client = Minecraft.getInstance();
-
-            // Schedule a slight delay so the block has time to appear on the client
-            client.execute(() -> tryApplyPatternWithDelay(message, 0));
+            ClientPacketQueue.queuePacket(message);
         });
 
         ctx.get().setPacketHandled(true);
     }
 
-    private static void tryApplyPatternWithDelay(SyncChalkPatternPacket message, int retryCount) {
-        Minecraft client = Minecraft.getInstance();
-        Level level = client.level;
+    public static boolean tryApplyPattern(SyncChalkPatternPacket message) {
 
-        if (level == null || retryCount > 5) {
-            System.out.println("❌ Level is null or too many retries");
-            return;
+        Level level = Minecraft.getInstance().level;
+
+        if (level == null) {
+            return false;
         }
 
         BlockPos pos = message.getPos();
-        Block block = level.getBlockState(pos).getBlock();
 
-        // Make new pattern object to get pattern data
-        PatternObject pattern = new PatternObject();
-        pattern = pattern.loadData(message.patternData);
-
-
-        if (block instanceof ChalkPatternBlock) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof ChalkPatternBlockEntity chalkEntity) {
-                System.out.println("✅ Found block + entity! Applying pattern and texture");
-
-                ChalkType chalkType = message.chalkType;
-
-                // Generate texture from pattern
-                System.out.println(pattern.getLines().size() + " - amount of lines. line data: " + pattern.getLines());
-                BufferedImage generatedImage = PatternTextureGenerator.generateBufferedImage(pattern, chalkType);
-                String textureFileName = "pattern_" + pos.getX() + "_" + pos.getY() + "_" + pos.getZ();
-
-                PatternTextureGenerator.saveTextureToFile(generatedImage, textureFileName);
-                PatternTextureLoader.loadGeneratedTexture(textureFileName);
-
-                chalkEntity.load(chalkEntity.getUpdateTag());
-                chalkEntity.syncWithClient();
-            } else {
-                System.out.println("⚠ Block entity still not loaded, retrying...");
-                retrySyncLater(message, retryCount + 1);
-            }
-        } else {
-            System.out.println("⏳ Block is still " + block + ", retrying...");
-            retrySyncLater(message, retryCount + 1);
+        if (!level.isLoaded(pos)) {
+            return false;
         }
+
+
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ChalkPatternBlockEntity chalkEntity) {
+            System.out.println("✅ Found block + entity! Applying pattern and texture");
+
+            PatternObject patternObject = PatternObject.loadData(message.patternData);
+            chalkEntity.updatePatternFromPacket(patternObject, message.chalkType);
+            return true;
+        }
+        return false;
     }
 
-    private static void retrySyncLater(SyncChalkPatternPacket message, int retryCount) {
-        Minecraft client = Minecraft.getInstance();
-        client.execute(() -> {
-            try {
-                Thread.sleep(100); // wait ~100ms
-            } catch (InterruptedException ignored) {}
-            tryApplyPatternWithDelay(message, retryCount);
-        });
-    }
-
-    private String getTexturePath() {
-        return texturePath;
-    }
-
-    private ChalkType getChalkType(){
+    public ChalkType getChalkType(){
         return chalkType;
     }
 
-    public PatternObject getPattern() {
-        return PatternObject.loadData(patternData);
+    public String getPattern() {
+        return patternData;
     }
 
-    private BlockPos getPos() {
+    public BlockPos getPos() {
         return pos;
     }
 }

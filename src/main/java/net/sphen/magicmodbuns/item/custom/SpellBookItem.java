@@ -22,6 +22,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 import net.sphen.magicmodbuns.animations.item.spellbook.SpellBookRenderer;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookItemStackHandler;
@@ -129,6 +130,14 @@ public class SpellBookItem extends Item implements GeoItem {
                 UseOnContext pageContext = new UseOnContext(level, player, pContext.getHand(), pageToUse, hitResult);
 
                 InteractionResult result = pageToUse.getItem().useOn(pageContext);
+
+                if (!level.isClientSide && result.consumesAction()) {
+                    if (bookInventory instanceof ItemStackHandler handler) {
+                        stack.getOrCreateTag().put("Inventory", handler.serializeNBT());
+                    }
+                }
+
+
                 return result;
             }
         }

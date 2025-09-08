@@ -47,7 +47,6 @@ public class PlaceChalkPatternPacket {
             SyncChalkPatternPacket syncPacket = new SyncChalkPatternPacket(
                     pos,
                     message.getPatternData(),
-                    message.getTexturePath(),
                     message.getChalkType());
             MagicMod.NETWORK.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), syncPacket);
 
