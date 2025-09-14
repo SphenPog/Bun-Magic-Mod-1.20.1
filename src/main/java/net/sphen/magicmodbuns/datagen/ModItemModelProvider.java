@@ -76,4 +76,27 @@ public class ModItemModelProvider extends ItemModelProvider {
                     .end();
         }
     }
+
+    private void compassItem(RegistryObject<Item> item) {
+        for (int i = 0; i <32; i++) {
+            String formattedIndex = String.format("%02d", i);
+
+            getBuilder(item.getId().getPath() + "_" + formattedIndex)
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/compass/" + item.getId().getPath() + "_" + formattedIndex));
+        }
+
+        ItemModelBuilder modelBuilder = getBuilder(item.getId().getPath())
+                .parent(getExistingFile(mcLoc("item/generated")))
+                .texture("layer0", modLoc("item/compass/" + item.getId().getPath() + "_00"));
+
+        for (int i = 0; i <32; i++){
+            String formattedIndex = String.format("%02d", i);
+
+            modelBuilder.override()
+                    .predicate(mcLoc("angle"), i / 32.0f)
+                    .model(getExistingFile(modLoc("item/compass/" + item.getId().getPath() + "_" +formattedIndex)))
+                    .end();
+        }
+    }
 }

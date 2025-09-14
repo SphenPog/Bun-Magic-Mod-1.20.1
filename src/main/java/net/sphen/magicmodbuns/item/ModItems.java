@@ -6,6 +6,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.sphen.magicmodbuns.MagicMod;
+import net.sphen.magicmodbuns.item.custom.LocateCompassItem;
 import net.sphen.magicmodbuns.item.custom.MetalDetectorItem;
 import net.sphen.magicmodbuns.item.custom.SpellBookItem;
 import net.sphen.magicmodbuns.item.custom.SpellPaperItem;
@@ -25,6 +26,8 @@ public class ModItems {
     public static final RegistryObject<Item> CHALK_AIR = ITEMS.register("chalk_air",
             () -> new AirChalkItem(new Item.Properties()));
 
+    public static final RegistryObject<Item> LOCATE_COMPASS = ITEMS.register("locate_compass",
+            () -> new LocateCompassItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> SPELL_BOOK = ITEMS.register("spell_book",
             () -> new SpellBookItem(new Item.Properties()));

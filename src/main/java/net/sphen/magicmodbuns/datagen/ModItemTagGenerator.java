@@ -6,6 +6,7 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ModBlocks;
@@ -31,6 +32,12 @@ public class ModItemTagGenerator extends ItemTagsProvider {
         this.tag(ModTags.Items.SPELL_BOOK_PAPER_TAG)
                 .add(Items.PAPER)
                 .add(ModItems.SPELL_PAPER.get());
+
+        this.tag(ModTags.Items.LOCATE_MINERALS)
+                .addTags(Tags.Items.GEMS)
+                .addTags(Tags.Items.INGOTS)
+                .addTags(Tags.Items.RAW_MATERIALS)
+                .addTags(Tags.Items.ORES);
 
         this.tag(ItemTags.LOGS_THAT_BURN)
                 .add(ModBlocks.WILLOW_LOG.get().asItem())

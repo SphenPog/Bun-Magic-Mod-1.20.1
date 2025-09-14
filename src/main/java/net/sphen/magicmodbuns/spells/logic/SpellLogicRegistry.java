@@ -1,6 +1,7 @@
 package net.sphen.magicmodbuns.spells.logic;
 
 import net.minecraft.resources.ResourceLocation;
+import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.spells.SpellLogic;
 
 import java.util.HashMap;
@@ -18,7 +19,8 @@ public class SpellLogicRegistry {
     }
 
     public static void init() {
-        register(new ResourceLocation("magicmodbuns", "place_block"), new SpellLogicPlaceBlock());
+        register(new ResourceLocation(MagicMod.MODID, "place_block"), new SpellLogicPlaceBlock());
+        register(new ResourceLocation(MagicMod.MODID, "locate"), new SpellLogicLocate());
         // add more here
     }
 

@@ -36,6 +36,7 @@ import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.SpellLoader;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
+import net.sphen.magicmodbuns.spells.logic.recipes.LocateRecipeRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;
 import net.sphen.magicmodbuns.spells.runes.RuneType;
@@ -69,6 +70,7 @@ public class MagicMod {
         ModMenuTypes.register(modEventBus);
 
         ModSpellEntities.register(modEventBus);
+        LocateRecipeRegistry.registerRecipes();
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
