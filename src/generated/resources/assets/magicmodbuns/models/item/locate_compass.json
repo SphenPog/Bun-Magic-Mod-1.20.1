@@ -1,0 +1,200 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "magicmodbuns:item/locate_compass_00",
+      "predicate": {
+        "minecraft:angle": 0.0
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_01",
+      "predicate": {
+        "minecraft:angle": 0.03125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_02",
+      "predicate": {
+        "minecraft:angle": 0.0625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_03",
+      "predicate": {
+        "minecraft:angle": 0.09375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_04",
+      "predicate": {
+        "minecraft:angle": 0.125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_05",
+      "predicate": {
+        "minecraft:angle": 0.15625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_06",
+      "predicate": {
+        "minecraft:angle": 0.1875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_07",
+      "predicate": {
+        "minecraft:angle": 0.21875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_08",
+      "predicate": {
+        "minecraft:angle": 0.25
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_09",
+      "predicate": {
+        "minecraft:angle": 0.28125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_10",
+      "predicate": {
+        "minecraft:angle": 0.3125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_11",
+      "predicate": {
+        "minecraft:angle": 0.34375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_12",
+      "predicate": {
+        "minecraft:angle": 0.375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_13",
+      "predicate": {
+        "minecraft:angle": 0.40625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_14",
+      "predicate": {
+        "minecraft:angle": 0.4375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_15",
+      "predicate": {
+        "minecraft:angle": 0.46875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_16",
+      "predicate": {
+        "minecraft:angle": 0.5
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_17",
+      "predicate": {
+        "minecraft:angle": 0.53125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_18",
+      "predicate": {
+        "minecraft:angle": 0.5625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_19",
+      "predicate": {
+        "minecraft:angle": 0.59375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_20",
+      "predicate": {
+        "minecraft:angle": 0.625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_21",
+      "predicate": {
+        "minecraft:angle": 0.65625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_22",
+      "predicate": {
+        "minecraft:angle": 0.6875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_23",
+      "predicate": {
+        "minecraft:angle": 0.71875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_24",
+      "predicate": {
+        "minecraft:angle": 0.75
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_25",
+      "predicate": {
+        "minecraft:angle": 0.78125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_26",
+      "predicate": {
+        "minecraft:angle": 0.8125
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_27",
+      "predicate": {
+        "minecraft:angle": 0.84375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_28",
+      "predicate": {
+        "minecraft:angle": 0.875
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_29",
+      "predicate": {
+        "minecraft:angle": 0.90625
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_30",
+      "predicate": {
+        "minecraft:angle": 0.9375
+      }
+    },
+    {
+      "model": "magicmodbuns:item/locate_compass_31",
+      "predicate": {
+        "minecraft:angle": 0.96875
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "magicmodbuns:item/compass/locate_compass_00"
+  }
+}

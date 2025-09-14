@@ -4,8 +4,13 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -97,7 +102,14 @@ public class MagicMod {
         NETWORK.registerMessage(3, CloseBookPacket.class, CloseBookPacket::encode, CloseBookPacket::decode, CloseBookPacket::handle);
         NETWORK.registerMessage(4, CycleSpellPacket.class, CycleSpellPacket::encode, CycleSpellPacket::decode, CycleSpellPacket::handle);
 
+        // Register rune IDs
         RuneRegistry.registerRuneId("magicmodbuns:light", RuneType.LIGHT);
+        RuneRegistry.registerRuneId("magicmodbuns:water", RuneType.WATER);
+        RuneRegistry.registerRuneId("magicmodbuns:earth", RuneType.EARTH);
+        RuneRegistry.registerRuneId("magicmodbuns:fire", RuneType.FIRE);
+        RuneRegistry.registerRuneId("magicmodbuns:air", RuneType.AIR);
+        RuneRegistry.registerRuneId("magicmodbuns:darkness", RuneType.DARKNESS);
+        RuneRegistry.registerRuneId("magicmodbuns:unknown", RuneType.UNKNOWN);
 
         SpellLogicRegistry.init();
     }
@@ -143,6 +155,43 @@ public class MagicMod {
                             } else {
                                 return 0f;
                             }
+                        });
+
+                ItemProperties.register(ModItems.LOCATE_COMPASS.get(), new ResourceLocation("angle"),
+                        (itemStack, clientLevel, livingEntity, seed) -> {
+
+                            Entity entity = livingEntity != null ? livingEntity : itemStack.getFrame();
+                            if (entity == null) {
+                                return 0.0F;
+                            }
+
+                            GlobalPos targetPos = CompassItem.getLodestonePosition(itemStack.getOrCreateTag());
+                            long worldTime = clientLevel.getGameTime();
+
+                            // Check if the entity is in same dimension
+                            if (targetPos == null || !targetPos.dimension().equals(clientLevel.dimension())) {
+                                return (clientLevel.getGameTime() %40) / 40.0F; // Spin randomly if no target/wrong dimension
+                            }
+
+                            // Get players look angle
+                            double playerAngle = livingEntity instanceof Player ? ((Player) livingEntity).getYHeadRot() : entity.getYRot();
+                            playerAngle = Mth.positiveModulo(playerAngle / 360.0, 1.0);
+
+                            // Calculate the angle from the player to target
+                            double angleToTarget = Math.atan2(
+                                    (double)targetPos.pos().getZ() - entity.getZ(),
+                                    (double)targetPos.pos().getX() - entity.getX()
+                            ) / (Math.PI * 2.0);
+
+                            // The final angle, with wobble
+                            double finalAngle;
+                            if (entity.isVehicle()) {
+                                finalAngle = 0.5 - (playerAngle - 0.25 - angleToTarget);
+                            } else {
+                                finalAngle = 0.5 - (playerAngle - 0.25 - angleToTarget);
+                            }
+
+                            return (float) Mth.positiveModulo(finalAngle + 0.5, 1.0);
                         });
             });
         }

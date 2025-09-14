@@ -66,7 +66,7 @@ public class SpellLoader extends SimpleJsonResourceReloadListener {
                 if (type != null) spellRunes.add(type);
             });
 
-            System.out.println("spell runes: " + spellRunes);
+            MagicMod.LOGGER.info("[Spell Loader] spell runes: " + spellRunes);
 
             if (runeTypes.equals(spellRunes)) {
                 return definition;

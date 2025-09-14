@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.sphen.magicmodbuns.spells.SpellInstance;
 import net.sphen.magicmodbuns.spells.SpellLogic;
@@ -35,6 +36,7 @@ public class SpellLogicLocate extends SpellLogic {
 
         if (itemsInRecipe.isEmpty()) {
             //empty failure result
+            handleFailureGeneral(serverLevel, pos);
             return;
         }
 
@@ -42,11 +44,27 @@ public class SpellLogicLocate extends SpellLogic {
             //check if items match any recipe
             if (recipe.matches(itemsInRecipe, level, pos)) {
                 recipe.performCraft(itemsInRecipe, level, pos);
+                handleSuccessRunes((ServerLevel) level, bounds);
                 return;
             }
         }
 
         handleCraftingFailure(itemsInRecipe, (ServerLevel) level, pos);
+    }
+
+    //removes all runes in the bounds
+    private static void handleSuccessRunes(ServerLevel level, AABB bounds) {
+        BlockPos min = BlockPos.containing(bounds.minX, bounds.minY, bounds.minZ);
+        BlockPos max = BlockPos.containing(bounds.maxX - 1, bounds.maxY - 1, bounds.maxZ - 1);
+
+        for (BlockPos pos : BlockPos.betweenClosed(min, max)){
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        }
+    }
+
+    public static void handleFailureGeneral(ServerLevel level, BlockPos pos) {
+        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0f, 1.0f);
+        level.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 20, 0.2, 0.2, 0.2, 0.0);
     }
 
     private static void handleCraftingFailure(List<ItemEntity> items, ServerLevel level, BlockPos pos) {

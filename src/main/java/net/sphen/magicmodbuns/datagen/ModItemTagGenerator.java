@@ -34,10 +34,8 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.SPELL_PAPER.get());
 
         this.tag(ModTags.Items.LOCATE_MINERALS)
-                .addTags(Tags.Items.GEMS)
-                .addTags(Tags.Items.INGOTS)
-                .addTags(Tags.Items.RAW_MATERIALS)
-                .addTags(Tags.Items.ORES);
+                .addTags(Tags.Items.ORES)
+                .addTags(Tags.Items.STORAGE_BLOCKS);
 
         this.tag(ItemTags.LOGS_THAT_BURN)
                 .add(ModBlocks.WILLOW_LOG.get().asItem())

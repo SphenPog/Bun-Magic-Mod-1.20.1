@@ -25,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.entity.ChalkPatternBlockEntity;
 import net.sphen.magicmodbuns.item.ModItems;
@@ -86,12 +87,12 @@ public class ChalkPatternBlock extends BaseEntityBlock {
             RunePatternGraph graph = RuneSearch.findPattern(pLevel, pPos, radius, diagonals);
             Set<RuneType> detectedRunes = graph.getRuneTypes();
 
-            System.out.println("Detected rune types: " + detectedRunes);
+            MagicMod.LOGGER.info("[ChalkPatternBlock] Detected rune types: " + detectedRunes);
 
             SpellDefinition spell = SpellLoader.findSpellFromRunes(detectedRunes);
 
             if (spell != null) {
-                System.out.println("Detected spell: " + spell.id);
+                MagicMod.LOGGER.info("[ChalkPatternBlock] Detected spell: " + spell.id);
 
                 SpellInstance instance = new SpellInstance();
                 instance.definition = spell;
@@ -101,7 +102,7 @@ public class ChalkPatternBlock extends BaseEntityBlock {
 
                 instance.cast();
                 } else {
-                System.out.println("No spell detected for this rune combination.");
+                MagicMod.LOGGER.info("[ChalkPatternBlock] No spell detected for this rune combination.");
             }
 
             return InteractionResult.SUCCESS;
