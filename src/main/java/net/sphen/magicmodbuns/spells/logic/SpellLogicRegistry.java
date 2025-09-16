@@ -19,6 +19,7 @@ public class SpellLogicRegistry {
 
     public static void init() {
         register(new ResourceLocation("magicmodbuns", "place_block"), new SpellLogicPlaceBlock());
+        register(new ResourceLocation("magicmodbuns", "gust"), new SpellLogicGust());
         // add more here
     }
 

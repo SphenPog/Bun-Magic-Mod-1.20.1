@@ -96,16 +96,4 @@ public class SpellLogicPlaceBlock extends SpellLogic {
             }
         }
     }
-
-    private BlockPos getFacingDirection(Player player, BlockPos runePosition) {
-
-        double deltaX = runePosition.getX() - player.getX();
-        double deltaZ = runePosition.getZ() - player.getZ();
-
-        if (Math.abs(deltaX) > Math.abs(deltaZ)) {
-            return deltaX > 0 ? new BlockPos(1, 0, 0) : new BlockPos(-1, 0, 0);
-        } else {
-            return deltaZ > 0 ? new BlockPos(0, 0, 1) : new BlockPos(0, 0, -1);
-        }
-    }
 }

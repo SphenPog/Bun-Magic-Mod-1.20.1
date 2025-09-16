@@ -6,11 +6,16 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,6 +40,7 @@ import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.SpellLoader;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicGust;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;
@@ -95,7 +101,14 @@ public class MagicMod {
         NETWORK.registerMessage(3, CloseBookPacket.class, CloseBookPacket::encode, CloseBookPacket::decode, CloseBookPacket::handle);
         NETWORK.registerMessage(4, CycleSpellPacket.class, CycleSpellPacket::encode, CycleSpellPacket::decode, CycleSpellPacket::handle);
 
+        // Register rune IDs
         RuneRegistry.registerRuneId("magicmodbuns:light", RuneType.LIGHT);
+        RuneRegistry.registerRuneId("magicmodbuns:water", RuneType.WATER);
+        RuneRegistry.registerRuneId("magicmodbuns:earth", RuneType.EARTH);
+        RuneRegistry.registerRuneId("magicmodbuns:fire", RuneType.FIRE);
+        RuneRegistry.registerRuneId("magicmodbuns:air", RuneType.AIR);
+        RuneRegistry.registerRuneId("magicmodbuns:darkness", RuneType.DARKNESS);
+        RuneRegistry.registerRuneId("magicmodbuns:unknown", RuneType.UNKNOWN);
 
         SpellLogicRegistry.init();
     }
@@ -117,13 +130,55 @@ public class MagicMod {
 
     }
 
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            event.getServer().getAllLevels().forEach(SpellLogicGust::onServerTick);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingUpdate(LivingEvent.LivingTickEvent event) {
+        Entity entity = event.getEntity();
+
+        if (entity instanceof Player) {
+            System.out.println("Applying gust to player..");
+        }
+
+        if (entity.getTags().contains("gust_push")) {
+            double pushX = 0;
+            double pushY = 0.5;
+            double pushZ = 0;
+
+            for (String tag : entity.getTags()) {
+                if (tag.startsWith("gust_x:")) {
+                    pushX = Double.parseDouble(tag.substring(7));
+                } else if (tag.startsWith("gust_y:")) {
+                    pushY = Double.parseDouble(tag.substring(7));
+                } else if (tag.startsWith("gust Z:")) {
+                    pushZ = Double.parseDouble(tag.substring(7));
+                }
+            }
+
+            if (entity instanceof Player) {
+                pushX *= 3.0;
+                pushY *= 1.5;
+                pushZ *= 3.0;
+            }
+
+            Vec3 gustForce = new Vec3(pushX, pushY, pushZ);
+            entity.addDeltaMovement(gustForce);
+
+            entity.getTags().removeIf(tag -> tag.startsWith("gust_"));
+        }
+    }
+
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
 
-            System.out.println("ONCLIENTSETUP IS RUNNING");
             event.enqueueWork(() -> {
                 MenuScreens.register(ModMenuTypes.MORTAR_PESTLE_MENU.get(), MortarPestleScreen::new);
                 MenuScreens.register(ModMenuTypes.CHALK_MENU.get(), ChalkScreen::new);

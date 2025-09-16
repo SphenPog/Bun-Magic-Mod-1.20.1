@@ -1,0 +1,10 @@
+{
+  "logic": "magicmodbuns:gust",
+  "config": {
+    "runes": ["magicmodbuns:air"],
+    "shape": "line",
+    "strength": 5,
+    "duration": 5,
+    "length": 5
+  }
+}
