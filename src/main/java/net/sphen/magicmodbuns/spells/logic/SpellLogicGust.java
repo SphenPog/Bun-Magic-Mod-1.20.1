@@ -6,15 +6,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.sphen.magicmodbuns.MagicMod;
 import net.sphen.magicmodbuns.spells.SpellInstance;
 import net.sphen.magicmodbuns.spells.SpellLogic;
 import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
+import net.sphen.magicmodbuns.util.Packets.PlayerVelocityPacket;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -32,6 +36,14 @@ public class SpellLogicGust extends SpellLogic {
 
         JsonObject spellConfig = instance.definition.config;
         BlockPos origin = graph.getOrigin();
+        AABB bounds = graph.getBounds();
+
+        BlockPos min = BlockPos.containing(bounds.minX, bounds.minY, bounds.minZ);
+        BlockPos max = BlockPos.containing(bounds.maxX - 1, bounds.maxY - 1, bounds.maxZ - 1);
+
+        for (BlockPos pos : BlockPos.betweenClosed(min, max)){
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        }
 
         //get opposite player direction
         Direction pushDirection = getDirectionFromPlayerToOrigin(player, origin);
@@ -51,7 +63,7 @@ public class SpellLogicGust extends SpellLogic {
             case "line" -> {
                 int length = spellConfig.has("length") ? spellConfig.get("length").getAsInt() : 5;
 
-                BlockPos startPos = origin.relative(pushDirection);
+                BlockPos startPos = origin;
 
                 for (int i = 0; i < length; i++) {
                     BlockPos gustPos = startPos.relative(pushDirection, i);
@@ -63,19 +75,20 @@ public class SpellLogicGust extends SpellLogic {
             case "wall" -> {
                 int width = spellConfig.has("width") ? spellConfig.get("width").getAsInt() : 5;
                 int height = spellConfig.has("height") ? spellConfig.get("height").getAsInt() : 3;
-                int distance = spellConfig.has("distance") ? spellConfig.get("distance").getAsInt() : 1;
+                int distance = spellConfig.has("distance") ? spellConfig.get("distance").getAsInt() : 3;
 
                 Direction right = pushDirection.getClockWise();
-                BlockPos wallCenter = origin.relative(pushDirection, distance);
-
+                BlockPos wallCenter = origin;
                 int halfWidth = width / 2;
-                int halfHeight = height / 2;
 
-                for (int w = -halfHeight; w <= halfHeight; w++) {
-                    for (int h = 0; h < height; h++) {
-                        BlockPos gustPos = wallCenter.relative(right, w).above(h);
-                        AABB gustArea = new AABB(gustPos);
-                        createGust(serverLevel, gustArea, forceVector, duration);
+                for (int d = 0; d < distance; d++) {
+                    BlockPos wallLayerCenter = wallCenter.relative(pushDirection, d);
+                    for (int w = -halfWidth; w <= halfWidth; w++) {
+                        for (int h = 0; h < height; h++) {
+                            BlockPos gustPos = wallLayerCenter.relative(right, w).above(h);
+                            AABB gustArea = new AABB(gustPos);
+                            createGust(serverLevel, gustArea, forceVector, duration);
+                        }
                     }
                 }
             }
@@ -110,20 +123,39 @@ public class SpellLogicGust extends SpellLogic {
             for (Entity entity : affectedEntities){
                 entity.getTags().removeIf(tag -> tag.startsWith("gust_"));
 
-                // Add new tags: one to identify, three to store the force vector
-                entity.addTag("gust_push");
-                entity.addTag("gust_x:" + gust.forceVector().x());
-                entity.addTag("gust_y:" + gust.forceVector().y());
-                entity.addTag("gust_z:" + gust.forceVector().z());
-            }
+                double powerX = 0.1;
+                double powerY = 0.1;
+                double powerZ = 0.1;
 
+                // Players get an even bigger multiplier to overcome their inertia.
+                if (entity instanceof Player) {
+                    powerX *= 0.9;
+                    powerY *= 0.9;
+                    powerZ *= 0.9;
+
+
+                Vec3 gustForce = new Vec3(
+                        gust.forceVector().x() * powerX,
+                        gust.forceVector().y() * powerY,
+                        gust.forceVector().z() * powerZ
+                );
+
+                MagicMod.sendToPlayer(new PlayerVelocityPacket(gustForce), (ServerPlayer) entity);
+            } else {
+                        Vec3 gustForce = new Vec3(
+                                gust.forceVector().x() * powerX,
+                                gust.forceVector().y() * powerY,
+                                gust.forceVector().z() * powerZ
+                        );
+                        entity.addDeltaMovement(gustForce);
+                    }
+            }
             spawnParticlesInZone(level, gust);
             activeGusts.replace(uuid, gust.tick());
         }));
     }
 
     private static void spawnParticlesInZone(ServerLevel level, GustZone gust) {
-        for (int i=0; i <5; i++) {
             AABB bounds = gust.areaOfEffect();
             double spawnX = (bounds.minX + bounds.maxX) / 2.0;
             double spawnY = (bounds.minY + bounds.maxY) / 2.0;
@@ -145,13 +177,21 @@ public class SpellLogicGust extends SpellLogic {
 
             level.sendParticles(gust.particle(), spawnX, spawnY, spawnZ, 0,
                     velX, velY, velZ, 0.15);
-        }
 
     }
 
     private Direction getDirectionFromPlayerToOrigin(Player player, BlockPos origin) {
         Vec3 vecToOrigin = Vec3.atCenterOf(origin).subtract(player.position());
 
-        return Direction.getNearest(vecToOrigin.x, vecToOrigin.y, vecToOrigin.z);
+        return Direction.getNearest(vecToOrigin.x, -vecToOrigin.y, vecToOrigin.z);
+    }
+
+    private static void handleSuccessRunes(ServerLevel level, AABB bounds) {
+        BlockPos min = BlockPos.containing(bounds.minX, bounds.minY, bounds.minZ);
+        BlockPos max = BlockPos.containing(bounds.maxX - 1, bounds.maxY - 1, bounds.maxZ - 1);
+
+        for (BlockPos pos : BlockPos.betweenClosed(min, max)){
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+        }
     }
 }
