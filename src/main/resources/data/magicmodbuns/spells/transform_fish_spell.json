@@ -1,0 +1,8 @@
+{
+  "logic": ["magicmodbuns:add_effect"],
+  "config": {
+    "runes": ["magicmodbuns:water", "magicmodbuns:water"],
+    "effect": "transform",
+    "type": "aquatic"
+  }
+}

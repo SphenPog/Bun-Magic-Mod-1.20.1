@@ -25,8 +25,10 @@ import net.sphen.magicmodbuns.animations.block.MortarAndPestleRenderer;
 import net.sphen.magicmodbuns.block.ChalkPatternBlockRenderer;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.block.entity.ModBlockEntities;
+import net.sphen.magicmodbuns.effect.ModEffects;
 import net.sphen.magicmodbuns.events.ClientEvents;
 import net.sphen.magicmodbuns.events.ClientTickHandler;
+import net.sphen.magicmodbuns.events.ModEvents;
 import net.sphen.magicmodbuns.item.ModCreativeModeTabs;
 import net.sphen.magicmodbuns.item.ModItems;
 import net.sphen.magicmodbuns.screen.ModMenuTypes;
@@ -68,6 +70,8 @@ public class MagicMod {
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
 
+        ModEffects.register(modEventBus);
+
         ModSpellEntities.register(modEventBus);
 
         // Register the commonSetup method for modloading
@@ -77,7 +81,7 @@ public class MagicMod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ClientEvents());
+        MinecraftForge.EVENT_BUS.register(new ModEvents());
         MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
 
         MinecraftForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> {
@@ -96,6 +100,7 @@ public class MagicMod {
         NETWORK.registerMessage(4, CycleSpellPacket.class, CycleSpellPacket::encode, CycleSpellPacket::decode, CycleSpellPacket::handle);
 
         RuneRegistry.registerRuneId("magicmodbuns:light", RuneType.LIGHT);
+        RuneRegistry.registerRuneId("magicmodbuns:water", RuneType.WATER);
 
         SpellLogicRegistry.init();
     }
@@ -122,6 +127,7 @@ public class MagicMod {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            MinecraftForge.EVENT_BUS.register(new ClientEvents());
 
             System.out.println("ONCLIENTSETUP IS RUNNING");
             event.enqueueWork(() -> {
