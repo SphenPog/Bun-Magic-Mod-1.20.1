@@ -1,0 +1,6 @@
+{
+  "logic": "magicmodbuns:locate",
+  "config": {
+    "runes": ["magicmodbuns:light","magicmodbuns:earth"]
+  }
+}

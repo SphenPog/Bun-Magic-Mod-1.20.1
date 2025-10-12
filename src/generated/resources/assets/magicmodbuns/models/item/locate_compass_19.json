@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "magicmodbuns:item/compass/locate_compass_19"
+  }
+}

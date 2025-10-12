@@ -8,6 +8,9 @@
   "item.magicmodbuns.spell_book": "Spell Book",
   "item.magicmodbuns.spell_paper": "Spell Paper",
 
+  "item.magicmodbuns.locate_compass": "Attuned Compass",
+  "item.magicmodbuns.locate_compass.tooltip.dimension": "Dimension: %s",
+
   "block.magicmodbuns.polished_limestone": "Polished Limestone",
   "block.magicmodbuns.raw_limestone": "Raw Limestone",
 

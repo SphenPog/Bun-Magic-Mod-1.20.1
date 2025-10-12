@@ -14,6 +14,9 @@ import net.sphen.magicmodbuns.block.ChalkType;
 import net.sphen.magicmodbuns.block.ModBlocks;
 import net.sphen.magicmodbuns.item.ModItems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, MagicMod.MODID, existingFileHelper);
@@ -29,6 +32,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleItem(ModItems.SPELL_BOOK);
         spellPaperBuilder(ModItems.SPELL_PAPER);
+
+        compassItem(ModItems.LOCATE_COMPASS);
 
         simpleBlockItem(ModBlocks.POLISHED_LIMESTONE);
         simpleBlockItem(ModBlocks.RAW_LIMESTONE);
@@ -73,6 +78,32 @@ public class ModItemModelProvider extends ItemModelProvider {
             spellPaperBuilder.override()
                     .predicate(new ResourceLocation(MagicMod.MODID, "spell_variant"), predicateValue)
                     .model(new ModelFile.UncheckedModelFile(variantModelLocation))
+                    .end();
+        }
+    }
+
+    private void compassItem(RegistryObject<Item> item) {
+        List<ItemModelBuilder> angleModels = new ArrayList<>();
+
+        for (int i = 0; i <32; i++) {
+            String formattedIndex = String.format("%02d", i);
+            String modelName = item.getId().getPath() + "_" + formattedIndex;
+
+            angleModels.add(
+                getBuilder(modelName)
+                        .parent(getExistingFile(mcLoc("item/generated")))
+                      .texture("layer0", modLoc("item/compass/" + modelName))
+            );
+        }
+
+        ItemModelBuilder mainModelBuilder = getBuilder(item.getId().getPath())
+                .parent(getExistingFile(mcLoc("item/generated")))
+                .texture("layer0", modLoc("item/compass/" + item.getId().getPath() + "_00"));
+
+        for (int i = 0; i <32; i++){
+            mainModelBuilder.override()
+                    .predicate(mcLoc("angle"), i / 32.0f)
+                    .model(angleModels.get(i))
                     .end();
         }
     }
