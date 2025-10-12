@@ -22,6 +22,7 @@ public class SpellLogicRegistry {
         register(new ResourceLocation(MagicMod.MODID, "place_block"), new SpellLogicPlaceBlock());
         register(new ResourceLocation(MagicMod.MODID, "locate"), new SpellLogicLocate());
         register(new ResourceLocation(MagicMod.MODID, "gust"), new SpellLogicGust());
+        register(new ResourceLocation(MagicMod.MODID, "add_effect"), new SpellLogicAddEffect());
         // add more here
     }
 
