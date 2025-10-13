@@ -1,8 +1,11 @@
-package net.sphen.magicmodbuns.spells.logic;
+package net.sphen.magicmodbuns.spells;
 
 import net.minecraft.resources.ResourceLocation;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.spells.SpellLogic;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicAddEffect;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicGust;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicLocate;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicPlaceBlock;
 
 import java.util.HashMap;
 import java.util.Map;

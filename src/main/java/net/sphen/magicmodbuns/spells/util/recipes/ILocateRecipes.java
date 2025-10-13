@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.spells.logic.recipes;
+package net.sphen.magicmodbuns.spells.util.recipes;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;

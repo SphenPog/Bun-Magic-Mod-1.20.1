@@ -42,13 +42,13 @@ import net.sphen.magicmodbuns.screen.chalk.ChalkScreen;
 import net.sphen.magicmodbuns.screen.mortarpestle.MortarPestleScreen;
 import net.sphen.magicmodbuns.screen.spellbook.SpellBookScreen;
 import net.sphen.magicmodbuns.spells.SpellLoader;
+import net.sphen.magicmodbuns.spells.SpellLogicRegistry;
 import net.sphen.magicmodbuns.spells.entities.ModSpellEntities;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicGust;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicRegistry;
-import net.sphen.magicmodbuns.spells.logic.recipes.LocateRecipeRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneRegistry;
 import net.sphen.magicmodbuns.spells.runes.RuneReloadListener;
 import net.sphen.magicmodbuns.spells.runes.RuneType;
+import net.sphen.magicmodbuns.spells.util.GustManager;
+import net.sphen.magicmodbuns.spells.util.recipes.LocateRecipeRegistry;
 import net.sphen.magicmodbuns.util.Packets.*;
 import org.slf4j.Logger;
 
@@ -141,7 +141,7 @@ public class MagicMod {
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            event.getServer().getAllLevels().forEach(SpellLogicGust::onServerTick);
+            event.getServer().getAllLevels().forEach(GustManager::onServerTick);
         }
     }
 

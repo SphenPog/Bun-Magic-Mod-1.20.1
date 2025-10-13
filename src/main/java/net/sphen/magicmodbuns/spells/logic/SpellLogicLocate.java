@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.sphen.magicmodbuns.spells.SpellInstance;
 import net.sphen.magicmodbuns.spells.SpellLogic;
-import net.sphen.magicmodbuns.spells.logic.recipes.ILocateRecipes;
-import net.sphen.magicmodbuns.spells.logic.recipes.LocateRecipeRegistry;
+import net.sphen.magicmodbuns.spells.util.recipes.ILocateRecipes;
+import net.sphen.magicmodbuns.spells.util.recipes.LocateRecipeRegistry;
 import net.sphen.magicmodbuns.spells.runes.RunePatternGraph;
 
 import java.util.List;

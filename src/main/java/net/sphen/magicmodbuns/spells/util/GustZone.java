@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.spells.logic;
+package net.sphen.magicmodbuns.spells.util;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.phys.AABB;

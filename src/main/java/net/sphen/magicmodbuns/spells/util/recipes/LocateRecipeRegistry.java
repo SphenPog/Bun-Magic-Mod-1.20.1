@@ -1,4 +1,4 @@
-package net.sphen.magicmodbuns.spells.logic.recipes;
+package net.sphen.magicmodbuns.spells.util.recipes;
 
 import org.apache.commons.compress.utils.Lists;
 

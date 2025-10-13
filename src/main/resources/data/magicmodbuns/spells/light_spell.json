@@ -3,6 +3,9 @@
   "config": {
     "runes": ["magicmodbuns:light"],
     "block": "minecraft:glowstone",
-    "shape": "single"
+    "shape": "single",
+    "x": 0,
+    "y": 0,
+    "z": 0
   }
 }
