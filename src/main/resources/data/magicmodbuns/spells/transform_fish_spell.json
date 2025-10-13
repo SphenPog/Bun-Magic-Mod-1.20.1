@@ -1,8 +1,9 @@
 {
-  "logic": ["magicmodbuns:add_effect"],
+  "logic": ["magicmodbuns:transform"],
   "config": {
     "runes": ["magicmodbuns:water", "magicmodbuns:water"],
-    "effect": "transform",
+    "duration": 120,
+    "show_icon": true,
     "type": "aquatic"
   }
 }

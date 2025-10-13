@@ -2,7 +2,7 @@ package net.sphen.magicmodbuns.spells;
 
 import net.minecraft.resources.ResourceLocation;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicAddEffect;
+import net.sphen.magicmodbuns.spells.logic.SpellLogicTransform;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicGust;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicLocate;
 import net.sphen.magicmodbuns.spells.logic.SpellLogicPlaceBlock;
@@ -25,7 +25,7 @@ public class SpellLogicRegistry {
         register(new ResourceLocation(MagicMod.MODID, "place_block"), new SpellLogicPlaceBlock());
         register(new ResourceLocation(MagicMod.MODID, "locate"), new SpellLogicLocate());
         register(new ResourceLocation(MagicMod.MODID, "gust"), new SpellLogicGust());
-        register(new ResourceLocation(MagicMod.MODID, "add_effect"), new SpellLogicAddEffect());
+        register(new ResourceLocation(MagicMod.MODID, "transform"), new SpellLogicTransform());
         // add more here
     }
 
