@@ -2,10 +2,7 @@ package net.sphen.magicmodbuns.spells;
 
 import net.minecraft.resources.ResourceLocation;
 import net.sphen.magicmodbuns.MagicMod;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicTransform;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicGust;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicLocate;
-import net.sphen.magicmodbuns.spells.logic.SpellLogicPlaceBlock;
+import net.sphen.magicmodbuns.spells.logic.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +23,7 @@ public class SpellLogicRegistry {
         register(new ResourceLocation(MagicMod.MODID, "locate"), new SpellLogicLocate());
         register(new ResourceLocation(MagicMod.MODID, "gust"), new SpellLogicGust());
         register(new ResourceLocation(MagicMod.MODID, "transform"), new SpellLogicTransform());
+        register(new ResourceLocation(MagicMod.MODID, "portal"), new SpellLogicPortal());
         // add more here
     }
 

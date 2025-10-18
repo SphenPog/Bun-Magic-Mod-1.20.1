@@ -25,6 +25,11 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(ChalkPatternBlockEntity :: new,
                             ModBlocks.CHALK_PATTERN.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<PuddlePortalBlockEntity>> PUDDLE =
+            BLOCK_ENTITIES.register("puddle_portal", () ->
+                    BlockEntityType.Builder.of(PuddlePortalBlockEntity :: new,
+                            ModBlocks.PUDDLE_PORTAL.get()).build(null));
+
     public static void register(IEventBus eventBus){
         BLOCK_ENTITIES.register(eventBus);
     }

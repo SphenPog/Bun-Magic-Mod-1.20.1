@@ -48,6 +48,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> WILLOW_LEAVES = registerBlock("willow_leaves",
             () -> new ModLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
 
+    public static final RegistryObject<Block> PUDDLE_PORTAL = registerBlock("puddle_portal",
+            () -> new PuddlePortalBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
+
     //add new blocks here ^^
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

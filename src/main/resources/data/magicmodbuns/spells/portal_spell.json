@@ -1,0 +1,6 @@
+{
+  "logic": ["magicmodbuns:portal"],
+  "config": {
+    "runes": ["magicmodbuns:water", "magicmodbuns:darkness"]
+  }
+}
